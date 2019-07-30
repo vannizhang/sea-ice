@@ -5,15 +5,15 @@ import { loadCss, loadModules } from "esri-loader";
 
 import { MapConfig } from './config';
 
-import IWebMap from "esri/WebMap";
 import IMapView from 'esri/views/MapView';
+import IWebMap from "esri/WebMap";
 
 interface IProps {};
 interface IState {};
 
-loadCss();
-
 export default class Map extends React.PureComponent<IProps, IState> {
+
+    mapView: IMapView;
 
     constructor(props:IProps){
         super(props);
@@ -22,33 +22,44 @@ export default class Map extends React.PureComponent<IProps, IState> {
         };
     }
 
-    initMap(){
-        loadModules([
-            'esri/views/MapView', 
-            'esri/WebMap'
-        ]).then(([
-            MapView, 
-            WebMap
-        ])=>{
+    async initMap(){
 
-            const webmap:IWebMap = new WebMap({
+        loadCss();
+
+        try {
+
+            type Modules = [
+                typeof IMapView,
+                typeof IWebMap
+            ];
+
+            const [ MapView, WebMap ] = await (loadModules([
+                'esri/views/MapView', 
+                'esri/WebMap'
+            ]) as Promise<Modules>);
+
+            const webmap = new WebMap({
                 portalItem: {
-                    id: MapConfig.web_map_id
+                    id: MapConfig.web_map_id.antarctica
                 }
             });
-      
-            const view:IMapView = new MapView({
+
+            const view = new MapView({
                 container: MapConfig.container_id,
-                map: webmap,
+                map: webmap
             });
 
             view.when(()=>{
-                // this.mapViewOnReadyHandler(view);
+                this.mapViewOnReadyHandler(view);
             });
 
-        }).catch(err=>{
-            console.error(err);
-        })
+        } catch(err){
+            console.error(err)
+        }
+    }
+
+    mapViewOnReadyHandler(mapView:IMapView){
+        this.mapView = mapView;
     }
 
     componentDidMount(){
