@@ -5,10 +5,14 @@ import { loadCss, loadModules } from "esri-loader";
 
 import { MapConfig } from './config';
 
+import { PolarRegion } from '../../types';
 import IMapView from 'esri/views/MapView';
 import IWebMap from "esri/WebMap";
 
-interface IProps {};
+interface IProps {
+    polarRegion:PolarRegion,
+};
+
 interface IState {};
 
 export default class Map extends React.PureComponent<IProps, IState> {

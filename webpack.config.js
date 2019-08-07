@@ -24,11 +24,11 @@ module.exports =  (env, options)=> {
                     test: /\.(ts|tsx)$/,
                     loader: 'ts-loader'
                 },
-                { 
-                    test: /\.js$/, 
-                    enforce: "pre", 
-                    loader: "source-map-loader" 
-                },
+                // { 
+                //     test: /\.js$/, 
+                //     enforce: "pre", 
+                //     loader: "source-map-loader" 
+                // },
                 {
                     test: /\.s?[ac]ss$/,
                     use: [
