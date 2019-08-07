@@ -2,18 +2,23 @@ import { queryFeatures, IQueryFeaturesResponse, IStatisticDefinition, IFeature  
 
 import { antarctic as antarcticConfig, arctic as arcticConfig } from './config';
 
-const queryMinMaxSeaExtByYear = async()=>{
+import { IMinMaxSeaExtByYearData, IMinMaxSeaExtByYearDataItem } from '../../types';
+
+const queryMinMaxSeaExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
+
+    const outStatisticFieldNameMinExt = 'Min_Rec_Extent';
+    const outStatisticFieldNameMaxExt = 'Max_Rec_Extent';
 
     const outStatisticsMinExt:IStatisticDefinition = {
         statisticType: 'min',
         onStatisticField: antarcticConfig.fields.extent,
-        outStatisticFieldName: 'Min_Rec_Extent'
+        outStatisticFieldName: outStatisticFieldNameMinExt
     };
 
     const outStatisticsMaxExt:IStatisticDefinition = {
         statisticType: 'max',
         onStatisticField: antarcticConfig.fields.extent,
-        outStatisticFieldName: 'Max_Rec_Extent'
+        outStatisticFieldName: outStatisticFieldNameMaxExt
     };
 
     const queryResForAntarctic = await queryFeatures({
@@ -40,12 +45,20 @@ const queryMinMaxSeaExtByYear = async()=>{
         ]
     }) as IQueryFeaturesResponse;
 
-    const outputDataAntarctic = queryResForAntarctic.features.map((d:IFeature)=>{
-        return d.attributes
+    const outputDataAntarctic:Array<IMinMaxSeaExtByYearDataItem> = queryResForAntarctic.features.map((d:IFeature)=>{
+        return {
+            min: d.attributes[outStatisticFieldNameMinExt],
+            max: d.attributes[outStatisticFieldNameMaxExt],
+            year: d.attributes[antarcticConfig.fields.year]
+        };
     });
 
-    const outputDataArctic = queryResForArctic.features.map((d:IFeature)=>{
-        return d.attributes
+    const outputDataArctic:Array<IMinMaxSeaExtByYearDataItem> = queryResForArctic.features.map((d:IFeature)=>{
+        return {
+            min: d.attributes[outStatisticFieldNameMinExt],
+            max: d.attributes[outStatisticFieldNameMaxExt],
+            year: d.attributes[arcticConfig.fields.year]
+        };
     });
 
     // console.log(queryResForAntarctic, queryResForArctic)

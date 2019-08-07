@@ -10,7 +10,6 @@ interface IProps {};
 
 interface IState {
     polarRegion:PolarRegion,
-    seaIceExtByYearData:any
 };
 
 export default class App extends React.PureComponent<IProps, IState> {
@@ -19,36 +18,28 @@ export default class App extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            polarRegion: 'antarctic',
-            seaIceExtByYearData: null
+            polarRegion: 'antarctic'
         }
+
+        this.updatePolarRegion = this.updatePolarRegion.bind(this);
     }
 
-    setSeaIceExtByYearData(data:any){
+    updatePolarRegion(polarRegion:PolarRegion){
         this.setState({
-            seaIceExtByYearData: data
+            polarRegion: polarRegion
         });
-    }
-
-    async loadSeaIceExtData(){
-        const seaIceExtByYear = await queryMinMaxSeaExtByYear();
-
-        this.setSeaIceExtByYearData(seaIceExtByYear);
-
-        // console.log(seaIceExtByYear);
-    }
-
-    async componentDidMount(){
-        this.loadSeaIceExtData();
     }
 
     render(){
         return (
             <div id='appContentDiv'>
-                <Map 
+                {/* <Map 
                     polarRegion={this.state.polarRegion}
+                /> */}
+                <InfoPanel 
+                    polarRegion={this.state.polarRegion}
+                    polarRegionOnChange={this.updatePolarRegion}
                 />
-                <InfoPanel />
             </div>
         )
     }
