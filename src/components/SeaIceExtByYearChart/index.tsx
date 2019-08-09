@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as d3 from 'd3';
 
 import { IMinMaxSeaExtByYearData, IMinMaxSeaExtByYearDataItem, PolarRegion } from '../../types';
+import config from './config';
 
 interface IProps {
     data: IMinMaxSeaExtByYearData
@@ -13,11 +14,12 @@ interface IProps {
 interface IState {
     svg:any,
     height: number,
-    xScale0: d3.ScaleBand<string>,
-    xScale1: d3.ScaleBand<string>,
+    width: number,
+    xScale0: d3.ScaleBand<number>,
+    xScale1: d3.ScaleBand<number>,
     yScale: d3.ScaleLinear<number, number>,
-    xAxis:d3.AxisContainerElement,
-    yAxis:d3.AxisContainerElement
+    chartData: Array<Array<number>>,
+    years:Array<number>
 };
 
 export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IState> {
@@ -31,12 +33,36 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         this.state = {
             svg: null,
             height: 0,
+            width: 0,
             xScale0: null,
             xScale1: null,
             yScale: null,
-            xAxis: null,
-            yAxis: null
+            chartData: [],
+            years: null
         };
+    }
+
+    setChartData(){
+        const minValues = this.props.data[this.props.polarRegion].map(d=>{
+            return d.min;
+        });
+
+        const maxValues = this.props.data[this.props.polarRegion].map(d=>{
+            return d.max;
+        });
+
+        const years = this.props.data[this.props.polarRegion].map(d=>{
+            return d.year;
+        });
+
+        this.setState({
+            chartData: [
+                maxValues, minValues
+            ],
+            years: years
+        },()=>{
+            this.drawChart();
+        });
     }
 
     setSvg(svg:any){
@@ -53,26 +79,25 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         });
     }
 
-    setAxis(x:any, y:any){
+    setHeightWidth(height:number, width:number){
         this.setState({
-            xAxis: x,
-            yAxis: y
-        });
-    }
-
-    setHeight(height:number){
-        this.setState({
-            height: height
+            height: height,
+            width: width
         });
     }
 
     initSvg(){
         const container = this.containerRef.current;
-        const margin = {top: 5, right: 10, bottom: 20, left: 40};
+        const margin = {top: 15, right: 10, bottom: 25, left: 25};
 
         const width = container.offsetWidth - margin.left - margin.right;
         const height = container.offsetHeight - margin.top - margin.bottom;
-        this.setHeight(height);
+        this.setHeightWidth(height, width);
+
+        const xScale0 = d3.scaleBand();
+        const xScale1 = d3.scaleBand(); 
+        const yScale = d3.scaleLinear().range([height, 0]);
+        this.setScales(xScale0, xScale1, yScale);
 
         const svg = d3.select(container).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -83,17 +108,6 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         this.setSvg(svg);
-
-        const xScale0 = d3.scaleBand().range([0, width]);
-        const xScale1 = d3.scaleBand().range([0, xScale0.bandwidth() - 10]);
-
-        const yScale = d3.scaleLinear().range([height, 0]);
-        this.setScales(xScale0, xScale1, yScale);
-
-        const xAxis = d3.axisBottom(xScale0);
-        const yAxis = d3.axisLeft(yScale).ticks(5);
-        this.setAxis(xAxis, yAxis);
-
     }
 
     drawChart(){
@@ -105,26 +119,35 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     updateDomainForXScale = ()=>{
-        const xDomain = this.props.data[this.props.polarRegion]
-        .map((d:IMinMaxSeaExtByYearDataItem)=>{ 
-            return d.year.toString(); 
-        });
-        this.state.xScale0.domain(xDomain);
+        const xDomain0 = d3.range(this.state.chartData[0].length)
+        this.state.xScale0.domain(xDomain0).range([0, this.state.width]);
+
+        const xDomain1 = d3.range(this.state.chartData.length);
+        this.state.xScale1.domain(xDomain1).range([0, this.state.xScale0.bandwidth()*.6]);
+        
     }
 
     updateDomainForYScale = ()=>{
-        const maxVals = this.props.data[this.props.polarRegion]
-        .map((d:IMinMaxSeaExtByYearDataItem)=>{ 
-            return d.max; 
-        });
-        const yScaleMax = d3.max(maxVals);
+        const maxValues = this.state.chartData[0];
+        const yScaleMax = d3.max(maxValues);
         this.state.yScale.domain([0, yScaleMax]);
     }
 
     drawXLabels(){
-        const svg = this.state.svg;
-        const xAxis = this.state.xAxis;
+        const { svg, xScale0, years } = this.state;
+
+        // show the ticks on xAxis for every 4 years
+        const tickValues = xScale0.domain()
+            .filter((d,i)=>!(i%4));
+
+        const xAxis = d3.axisBottom(xScale0)
+                        .tickValues(tickValues)
+                        .tickFormat((d)=>{
+                            return years[d].toString();
+                        });
+
         const xAxisLabel = svg.selectAll('.x.axis');
+
         if(!xAxisLabel.size()){
             svg.append("g")
             .attr("class", "x axis")
@@ -136,8 +159,10 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     drawYLabels(){
-        const svg = this.state.svg;
-        const yAxis = this.state.yAxis;
+        const { svg, yScale } = this.state;
+        // const yAxis = this.state.yAxis;
+        const yAxis = d3.axisLeft(yScale).ticks(5);
+
         const yAxisLabel = svg.selectAll('.y.axis');
 
         if(!yAxisLabel.size()){
@@ -150,42 +175,53 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     drawBars(){
-        // const { svg, xScale0, xScale1, yScale, height } = this.state;
-        // const data = this.props.data[this.props.polarRegion];
+        const { svg, xScale0, xScale1, yScale, height, chartData } = this.state;
 
-        // svg.append("g").selectAll("g")
-        //     .data(data)
-        // .enter().append("g")
-        //     .style("fill", '#987654')
-        //     .attr("transform", (d:IMinMaxSeaExtByYearDataItem)=>{ return "translate(" + xScale1(d.year.toString()) + ",0)"; })
-        // .selectAll("rect")
-        //     .data((d:IMinMaxSeaExtByYearDataItem)=>{ return d; })
-        // .enter().append("rect")
-        //     .attr("width", xScale1.bandwidth())
-        //     .attr("height", yScale)
-        //     .attr("x", function(d:IMinMaxSeaExtByYearDataItem) { return xScale0(d.year.toString()); })
-        //     .attr("y", function(d:IMinMaxSeaExtByYearDataItem) { return height - yScale(d.min); });
+        const barGroupClassName = 'sea-ice-ext-by-year-bar-group';
+
+        const barGroups = svg.selectAll('.' + barGroupClassName);
+
+        if(barGroups){
+            barGroups.remove().exit();
+        }
+
+        svg.append("g")
+            .attr('class', barGroupClassName)
+            .selectAll("g")
+            .data(chartData)
+        .enter().append("g")
+            .style("fill", (d:any, i:number)=>{
+                return i === 0 ? config.color.maxVal : config.color.minVal
+            })
+            .attr("transform", (d:any, i:number)=>{ 
+                return "translate(" + xScale1(i) + ",0)"; 
+            })
+        .selectAll("rect")
+            .data((d:any)=>{ return d; })
+        .enter().append("rect")
+            .attr("width", xScale1.bandwidth())
+            .attr("height", (d:number)=>{ 
+                return height - yScale(d); 
+            })
+            .attr("x", (d:any, i:number)=>{ 
+                return xScale0(i); 
+            })
+            .attr("y", (d:number)=>{ 
+                return yScale(d); 
+            })
+            .style('opacity', .8);
     }
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps:IProps, prevState:IState){
         
-        if(this.props.data){
-
-            // const min = this.props.data['arctic'].map(d=>{
-            //     return d.min
-            // });
-
-            // const max = this.props.data['arctic'].map(d=>{
-            //     return d.max
-            // });
-
-            // console.log([
-            //     min, max
-            // ]);
-
-            this.drawChart();
+        if( this.props.data !== prevProps.data || 
+            this.props.polarRegion !== prevProps.polarRegion
+        ){
+            if(this.props.data){
+                this.setChartData();
+            }
         }
-        
+
     }
 
     componentDidMount(){
