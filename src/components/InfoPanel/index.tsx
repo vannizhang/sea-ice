@@ -55,6 +55,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
 
                 <div className='trailer-half'>
                     <SeaIceExtByYearChart 
+                        polarRegion={this.props.polarRegion}
                         data={this.state.seaIceExtByYearData}
                     />
                 </div>
