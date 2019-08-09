@@ -11,8 +11,27 @@ interface IMinMaxSeaExtByYearData {
     'antarctic': Array<IMinMaxSeaExtByYearDataItem>
 }
 
+interface IFeaturesSeaIceExtByMonth {
+    year:number,
+    month:number,
+    value:number
+}
+
+interface ISeaIceExtMyMonthDataItem {
+    year: number,
+    values: number[]
+}
+
+interface ISeaIceExtMyMonthData {
+    'arctic': Array<ISeaIceExtMyMonthDataItem>,
+    'antarctic': Array<ISeaIceExtMyMonthDataItem>
+}
+
 export {
     PolarRegion,
     IMinMaxSeaExtByYearData,
-    IMinMaxSeaExtByYearDataItem
+    IMinMaxSeaExtByYearDataItem,
+    IFeaturesSeaIceExtByMonth,
+    ISeaIceExtMyMonthData,
+    ISeaIceExtMyMonthDataItem
 };

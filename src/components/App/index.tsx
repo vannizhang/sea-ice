@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import Map from '../Map';
 import InfoPanel from '../InfoPanel';
-import { queryMinMaxSeaExtByYear } from '../../services/sea-ice-extents'
 import { PolarRegion } from '../../types';
 
 interface IProps {};
@@ -33,9 +32,9 @@ export default class App extends React.PureComponent<IProps, IState> {
     render(){
         return (
             <div id='appContentDiv'>
-                {/* <Map 
+                <Map 
                     polarRegion={this.state.polarRegion}
-                /> */}
+                />
                 <InfoPanel 
                     polarRegion={this.state.polarRegion}
                     polarRegionOnChange={this.updatePolarRegion}
