@@ -17,7 +17,7 @@ export default class App extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            polarRegion: 'antarctic'
+            polarRegion: 'arctic'
         }
 
         this.updatePolarRegion = this.updatePolarRegion.bind(this);

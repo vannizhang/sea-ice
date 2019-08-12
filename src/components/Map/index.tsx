@@ -33,20 +33,14 @@ export default class Map extends React.PureComponent<IProps, IState> {
         try {
 
             type Modules = [
-                typeof IMapView,
-                typeof IWebMap
+                typeof IMapView
             ];
 
-            const [ MapView, WebMap ] = await (loadModules([
-                'esri/views/MapView', 
-                'esri/WebMap'
+            const [ MapView ] = await (loadModules([
+                'esri/views/MapView'
             ]) as Promise<Modules>);
 
-            const webmap = new WebMap({
-                portalItem: {
-                    id: MapConfig.web_map_id.antarctica
-                }
-            });
+            const webmap = await this.getWebMap();
 
             const view = new MapView({
                 container: MapConfig.container_id,
@@ -62,8 +56,39 @@ export default class Map extends React.PureComponent<IProps, IState> {
         }
     }
 
+    async toggleWebMap(){
+        if(this.mapView){
+            this.mapView.map = await this.getWebMap();
+        }
+    }
+
+    async getWebMap(){
+
+        type Modules = [
+            typeof IWebMap
+        ];
+
+        const [ WebMap ] = await (loadModules([
+            'esri/WebMap'
+        ]) as Promise<Modules>);
+
+        const webmap = new WebMap({
+            portalItem: {
+                id: MapConfig.web_map_id[this.props.polarRegion]
+            }
+        });
+
+        return webmap;
+    }
+
     mapViewOnReadyHandler(mapView:IMapView){
         this.mapView = mapView;
+    }
+
+    componentDidUpdate(prevProps:IProps, prevState:IState){
+        if(this.props.polarRegion !== prevProps.polarRegion){
+            this.toggleWebMap();
+        }
     }
 
     componentDidMount(){
