@@ -3,7 +3,7 @@ import './style.scss';
 import * as React from 'react';
 import * as d3 from 'd3';
 
-import { IMinMaxSeaExtByYearData, IMinMaxSeaExtByYearDataItem, PolarRegion } from '../../types';
+import { IMinMaxSeaExtByYearData, PolarRegion } from '../../types';
 import config from './config';
 
 interface IProps {
@@ -24,7 +24,6 @@ interface IState {
 
 export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IState> {
 
-    private svgElementId = 'SeaIceExtByYearChartSvg';
     private containerRef = React.createRef<HTMLDivElement>();
     
     constructor(props:IProps){
@@ -102,7 +101,6 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         const svg = d3.select(container).append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
-            .attr("id", this.svgElementId)
             .attr("class", 'sea-ice-ext-by-year-chart')
             .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");

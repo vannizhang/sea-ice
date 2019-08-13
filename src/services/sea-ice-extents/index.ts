@@ -6,8 +6,8 @@ import {
     IMinMaxSeaExtByYearData, 
     IMinMaxSeaExtByYearDataItem, 
     IFeaturesSeaIceExtByMonth, 
-    ISeaIceExtMyMonthData,
-    ISeaIceExtMyMonthDataItem 
+    ISeaIceExtByMonthData,
+    ISeaIceExtByMonthDataItem 
 } from '../../types';
 
 const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
@@ -75,7 +75,7 @@ const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
     };
 };
 
-const querySeaIceExtByMonth = async():Promise<ISeaIceExtMyMonthData>=>{
+const querySeaIceExtByMonth = async():Promise<ISeaIceExtByMonthData>=>{
 
     const queryResForAntarctic = await queryFeatures({
         url: antarcticConfig.url,
@@ -116,7 +116,7 @@ const querySeaIceExtByMonth = async():Promise<ISeaIceExtMyMonthData>=>{
 
 };
 
-const prepareSeaIceExtByMonth = (features:Array<IFeaturesSeaIceExtByMonth>):Array<ISeaIceExtMyMonthDataItem>=>{
+const prepareSeaIceExtByMonth = (features:Array<IFeaturesSeaIceExtByMonth>):Array<ISeaIceExtByMonthDataItem>=>{
 
     const dataByYear:{ [key:number]: number[] } = {};
 

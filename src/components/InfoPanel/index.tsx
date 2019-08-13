@@ -6,7 +6,7 @@ import PolarToggleBtn from '../PolarToggleBtn';
 import SeaIceExtByYearChart from '../SeaIceExtByYearChart';
 
 import { queryMinMaxSeaIceExtByYear, querySeaIceExtByMonth } from '../../services/sea-ice-extents'
-import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtMyMonthData } from '../../types';
+import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData } from '../../types';
 
 interface IProps {
     polarRegion:PolarRegion, 
@@ -15,7 +15,7 @@ interface IProps {
 
 interface IState {
     seaIceExtByYearData:IMinMaxSeaExtByYearData
-    seaIceExtByMonthData:ISeaIceExtMyMonthData
+    seaIceExtByMonthData:ISeaIceExtByMonthData
 };
 
 export default class InfoPanel extends React.PureComponent<IProps, IState> {
@@ -34,7 +34,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
         });
     }
 
-    setSeaIceExtByMonthData(data:ISeaIceExtMyMonthData){
+    setSeaIceExtByMonthData(data:ISeaIceExtByMonthData){
         this.setState({
             seaIceExtByMonthData: data
         });
@@ -49,7 +49,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
         // console.log(seaIceExtByYear);
 
         this.setSeaIceExtByMonthData(seaIceExtByMonth);
-        // console.log(seaIceExtByMonth);
+        console.log(seaIceExtByMonth);
     }
 
     async componentDidMount(){

@@ -17,14 +17,14 @@ interface IFeaturesSeaIceExtByMonth {
     value:number
 }
 
-interface ISeaIceExtMyMonthDataItem {
+interface ISeaIceExtByMonthDataItem {
     year: number,
     values: number[]
 }
 
-interface ISeaIceExtMyMonthData {
-    'arctic': Array<ISeaIceExtMyMonthDataItem>,
-    'antarctic': Array<ISeaIceExtMyMonthDataItem>
+interface ISeaIceExtByMonthData {
+    'arctic': Array<ISeaIceExtByMonthDataItem>,
+    'antarctic': Array<ISeaIceExtByMonthDataItem>
 }
 
 export {
@@ -32,6 +32,6 @@ export {
     IMinMaxSeaExtByYearData,
     IMinMaxSeaExtByYearDataItem,
     IFeaturesSeaIceExtByMonth,
-    ISeaIceExtMyMonthData,
-    ISeaIceExtMyMonthDataItem
+    ISeaIceExtByMonthData,
+    ISeaIceExtByMonthDataItem
 };
