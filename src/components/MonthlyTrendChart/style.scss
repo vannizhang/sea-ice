@@ -2,14 +2,20 @@
 
     .monthly-trend-line {
         fill: none;
-        stroke: rgba(89,255,252,.1);
-        stroke-width: 1px;
+        stroke: rgba(89,255,252,.15);
+        stroke-width: .8px;
     }
 
     .monthly-trend-line.is-active {
         fill: none;
         stroke: rgba(89,255,252,1);
-        stroke-width: 2px;
+        stroke-width: 1.5px;
+    }
+
+    .median-monthly-trend-line{
+        fill: none;
+        stroke: #fff766;
+        stroke-width: 1.5px;
     }
     
     .axis {

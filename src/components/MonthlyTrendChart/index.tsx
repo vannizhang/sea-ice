@@ -3,10 +3,11 @@ import './style.scss';
 import * as React from 'react';
 import * as d3 from 'd3';
 
-import { PolarRegion, ISeaIceExtByMonthData, ISeaIceExtByMonthDataItem } from '../../types';
+import { PolarRegion, ISeaIceExtByMonthData, IMedianSeaIceExtByMonth } from '../../types';
 
 interface IProps {
-    data: ISeaIceExtByMonthData
+    data: ISeaIceExtByMonthData,
+    medianData: IMedianSeaIceExtByMonth,
     polarRegion:PolarRegion,
 };
 
@@ -16,7 +17,8 @@ interface IState {
     width: number,
     xScale: d3.ScaleLinear<number, number>,
     yScale: d3.ScaleLinear<number, number>,
-    chartData: Array<Array<number>>
+    chartData: Array<Array<number>>,
+    medianData:Array<number>
 };
 
 export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IState> {
@@ -32,7 +34,8 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             width: 0,
             xScale: null,
             yScale: null,
-            chartData: []
+            chartData: [],
+            medianData: []
         };
     }
     
@@ -62,14 +65,17 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         const data = this.props.data[this.props.polarRegion]
                 .filter(d=>d.values.length === 12);
         
-        const years = data.map(d=>d.year);
+        // const years = data.map(d=>d.year);
 
         const chartData = data.map(d=>d.values);
+
+        const medianData = this.props.medianData[this.props.polarRegion];
 
         // console.log(years, chartData);
 
         this.setState({
-            chartData: chartData
+            chartData,
+            medianData
         },()=>{
             this.drawChart();
         });
@@ -169,14 +175,20 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     drawLines(){
-        const { svg, xScale, yScale, height, chartData } = this.state;
+        const { svg, xScale, yScale, chartData, medianData } = this.state;
 
         const lineGroupClassName = 'monthly-trend-lines';
+        const medianLineClassName = 'median-monthly-trend-line';
 
-        const lineGroups = svg.selectAll('.' + lineGroupClassName);
+        const existingLineGroups = svg.selectAll('.' + lineGroupClassName);
+        const existingMedianLine = svg.selectAll('.' + medianLineClassName);
 
-        if(lineGroups){
-            lineGroups.remove().exit();
+        if(existingLineGroups){
+            existingLineGroups.remove().exit();
+        }
+
+        if(existingMedianLine){
+            existingMedianLine.remove().exit();
         }
 
         const valueline = d3.line()
@@ -200,7 +212,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
 
                     const modifierClass = ['monthly-trend-line'];
 
-                    if(idx === 0){
+                    if(idx === chartData.length - 1){
                         modifierClass.push('is-active');
                     }
 
@@ -215,6 +227,17 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
                 // .on('mouseover', (d:any, i:number)=>{
                 //     console.log(i);
                 // })
+
+        const medianLine = svg.append('path')
+            .data([medianData])
+            .attr("class", medianLineClassName)
+            .style("stroke-dasharray", ("6, 6")) 
+            .attr("d", ( d:any )=>{
+                const data = d.map((value:number, index:number)=>{
+                    return [+index, +value]
+                });
+                return valueline(data);
+            });
     }
 
     componentDidUpdate(prevProps:IProps, prevState:IState){

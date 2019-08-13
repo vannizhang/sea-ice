@@ -6,8 +6,8 @@ import PolarToggleBtn from '../PolarToggleBtn';
 import SeaIceExtByYearChart from '../SeaIceExtByYearChart';
 import MonthlyTrendChart from '../MonthlyTrendChart';
 
-import { queryMinMaxSeaIceExtByYear, querySeaIceExtByMonth } from '../../services/sea-ice-extents'
-import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData } from '../../types';
+import { queryMinMaxSeaIceExtByYear, querySeaIceExtByMonth, queryMedianSeaIceExtByMonth } from '../../services/sea-ice-extents'
+import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData, IMedianSeaIceExtByMonth } from '../../types';
 
 interface IProps {
     polarRegion:PolarRegion, 
@@ -15,8 +15,9 @@ interface IProps {
 };
 
 interface IState {
-    seaIceExtByYearData:IMinMaxSeaExtByYearData
-    seaIceExtByMonthData:ISeaIceExtByMonthData
+    seaIceExtByYearData:IMinMaxSeaExtByYearData,
+    seaIceExtByMonthData:ISeaIceExtByMonthData,
+    medianSeaIceExtByMonthData:IMedianSeaIceExtByMonth
 };
 
 export default class InfoPanel extends React.PureComponent<IProps, IState> {
@@ -25,7 +26,8 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
 
         this.state = {
             seaIceExtByYearData: null,
-            seaIceExtByMonthData: null
+            seaIceExtByMonthData: null,
+            medianSeaIceExtByMonthData: null
         }
     }
 
@@ -35,9 +37,10 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
         });
     }
 
-    setSeaIceExtByMonthData(data:ISeaIceExtByMonthData){
+    setSeaIceExtByMonthData(data:ISeaIceExtByMonthData, medianData:IMedianSeaIceExtByMonth){
         this.setState({
-            seaIceExtByMonthData: data
+            seaIceExtByMonthData: data,
+            medianSeaIceExtByMonthData: medianData
         });
     }
 
@@ -46,10 +49,12 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
 
         const seaIceExtByMonth = await querySeaIceExtByMonth();
 
+        const medianSeaIceExtByMonth = await queryMedianSeaIceExtByMonth();
+
         this.setSeaIceExtByYearData(seaIceExtByYear);
         // console.log(seaIceExtByYear);
 
-        this.setSeaIceExtByMonthData(seaIceExtByMonth);
+        this.setSeaIceExtByMonthData(seaIceExtByMonth, medianSeaIceExtByMonth);
         // console.log(seaIceExtByMonth);
     }
 
@@ -79,6 +84,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
                     <MonthlyTrendChart 
                         polarRegion={this.props.polarRegion}
                         data={this.state.seaIceExtByMonthData}
+                        medianData={this.state.medianSeaIceExtByMonthData}
                     />
                 </div>
 
