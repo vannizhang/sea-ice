@@ -139,8 +139,10 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
 
         // show the ticks on xAxis for every 4 years
         const tickValues = xScale0.domain()
-            .filter((d,i)=>!(i%4));
-
+            .filter((d)=>{
+                return !(years[d] % 4);
+            });
+        
         const xAxis = d3.axisBottom(xScale0)
                         .tickValues(tickValues)
                         .tickFormat((d)=>{

@@ -14,6 +14,7 @@ const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
 
     const outStatisticFieldNameMinExt = 'Min_Rec_Extent';
     const outStatisticFieldNameMaxExt = 'Max_Rec_Extent';
+    const outStatisticFieldNameCountMonth = 'Count_Month';
 
     const outStatisticsMinExt:IStatisticDefinition = {
         statisticType: 'min',
@@ -27,6 +28,12 @@ const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
         outStatisticFieldName: outStatisticFieldNameMaxExt
     };
 
+    const outStatisticsCountMonth:IStatisticDefinition = {
+        statisticType: 'count',
+        onStatisticField: antarcticConfig.fields.month,
+        outStatisticFieldName: outStatisticFieldNameCountMonth
+    };
+
     const queryResForAntarctic = await queryFeatures({
         url: antarcticConfig.url,
         where: "1=1",
@@ -35,7 +42,8 @@ const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
         orderByFields: antarcticConfig.fields.year,
         outStatistics: [
             outStatisticsMinExt,
-            outStatisticsMaxExt
+            outStatisticsMaxExt,
+            outStatisticsCountMonth
         ]
     }) as IQueryFeaturesResponse;
 
@@ -47,25 +55,36 @@ const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
         orderByFields: arcticConfig.fields.year,
         outStatistics: [
             outStatisticsMinExt,
-            outStatisticsMaxExt
+            outStatisticsMaxExt,
+            outStatisticsCountMonth
         ]
     }) as IQueryFeaturesResponse;
 
-    const outputDataAntarctic:Array<IMinMaxSeaExtByYearDataItem> = queryResForAntarctic.features.map((d:IFeature)=>{
-        return {
-            min: d.attributes[outStatisticFieldNameMinExt],
-            max: d.attributes[outStatisticFieldNameMaxExt],
-            year: d.attributes[antarcticConfig.fields.year]
-        };
-    });
+    const outputDataAntarctic:Array<IMinMaxSeaExtByYearDataItem> = queryResForAntarctic.features
+        .filter((d:IFeature)=>{
+            // technically should only keep years with full 12 month of data, but the satellite was broken in later 1987 and early 1988,
+            // so we only have 11 month of data for those two years...
+            return d.attributes[outStatisticFieldNameCountMonth] >= 11;
+        })
+        .map((d:IFeature)=>{
+            return {
+                min: d.attributes[outStatisticFieldNameMinExt],
+                max: d.attributes[outStatisticFieldNameMaxExt],
+                year: d.attributes[antarcticConfig.fields.year]
+            };
+        });
 
-    const outputDataArctic:Array<IMinMaxSeaExtByYearDataItem> = queryResForArctic.features.map((d:IFeature)=>{
-        return {
-            min: d.attributes[outStatisticFieldNameMinExt],
-            max: d.attributes[outStatisticFieldNameMaxExt],
-            year: d.attributes[arcticConfig.fields.year]
-        };
-    });
+    const outputDataArctic:Array<IMinMaxSeaExtByYearDataItem> = queryResForArctic.features
+        .filter((d:IFeature)=>{
+            return d.attributes[outStatisticFieldNameCountMonth] >= 11;
+        })
+        .map((d:IFeature)=>{
+            return {
+                min: d.attributes[outStatisticFieldNameMinExt],
+                max: d.attributes[outStatisticFieldNameMaxExt],
+                year: d.attributes[arcticConfig.fields.year]
+            };
+        });
 
     // console.log(queryResForAntarctic, queryResForArctic)
 
