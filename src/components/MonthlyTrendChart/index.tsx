@@ -1,7 +1,9 @@
+import './style.scss';
+
 import * as React from 'react';
 import * as d3 from 'd3';
 
-import { PolarRegion, ISeaIceExtByMonthData } from '../../types';
+import { PolarRegion, ISeaIceExtByMonthData, ISeaIceExtByMonthDataItem } from '../../types';
 
 interface IProps {
     data: ISeaIceExtByMonthData
@@ -33,7 +35,6 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             chartData: []
         };
     }
-
     
     setSvg(svg:any){
         this.setState({
@@ -55,6 +56,25 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         });
     }
 
+    setChartData(){
+        
+        // can only draw line for year with full 12 month of data
+        const data = this.props.data[this.props.polarRegion]
+                .filter(d=>d.values.length === 12);
+        
+        const years = data.map(d=>d.year);
+
+        const chartData = data.map(d=>d.values);
+
+        // console.log(years, chartData);
+
+        this.setState({
+            chartData: chartData
+        },()=>{
+            this.drawChart();
+        });
+    }
+
     initSvg(){
         const container = this.containerRef.current;
         const margin = {top: 15, right: 10, bottom: 25, left: 25};
@@ -63,8 +83,13 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         const height = container.offsetHeight - margin.top - margin.bottom;
         this.setHeightWidth(height, width);
 
-        const xScale = d3.scaleLinear().range([0, width]);
-        const yScale = d3.scaleLinear().range([height, 0]);
+        const xScale = d3.scaleLinear()
+            .range([0, width])
+            .domain([0, 11]); // 12 month on x scale
+
+        const yScale = d3.scaleLinear()
+            .range([height, 0])
+            
         this.setScales(xScale, yScale);
 
         const svg = d3.select(container).append("svg")
@@ -78,32 +103,128 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     drawChart(){
-        this.updateDomainForXScale();
+        // this.updateDomainForXScale();
         this.updateDomainForYScale();
         this.drawXLabels();
         this.drawYLabels();
         this.drawLines();
     }
 
-    updateDomainForXScale = ()=>{
-        const { xScale } = this.state;
-        
-    }
+    // updateDomainForXScale = ()=>{
+    //     const { xScale } = this.state;
+    // }
 
     updateDomainForYScale = ()=>{
-        const { yScale } = this.state;
+        const { yScale, chartData } = this.state;
+
+        const minVals = chartData.map(d=>d3.min(d));
+        const minVal = Math.floor(d3.min(minVals));
+
+        const maxVals = chartData.map(d=>d3.max(d));
+        const maxVal = Math.ceil(d3.max(maxVals));
+
+        // console.log(minVal, maxVal);
+
+        yScale.domain([minVal, maxVal]);
     }
 
     drawXLabels(){
-        const { svg, xScale } = this.state;
+        const { svg, height, xScale } = this.state;
+
+        const labels = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ];
+
+        const xAxis = d3.axisBottom(xScale)
+                    .tickFormat((d,i)=>{
+                        return labels[i];
+                    });
+
+        const xAxisLabel = svg.selectAll('.x.axis');
+
+        if(!xAxisLabel.size()){
+            svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+        } else {
+            xAxisLabel.attr("transform", "translate(0," + height + ")").call(xAxis);
+        }
     }
 
     drawYLabels(){
         const { svg, yScale } = this.state;
+
+        const yAxis = d3.axisLeft(yScale).ticks(5);
+
+        const yAxisLabel = svg.selectAll('.y.axis');
+
+        if(!yAxisLabel.size()){
+            svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis);
+        } else {
+            yAxisLabel.call(yAxis);
+        }
     }
 
     drawLines(){
         const { svg, xScale, yScale, height, chartData } = this.state;
+
+        const lineGroupClassName = 'monthly-trend-lines';
+
+        const lineGroups = svg.selectAll('.' + lineGroupClassName);
+
+        if(lineGroups){
+            lineGroups.remove().exit();
+        }
+
+        const valueline = d3.line()
+            .curve(d3.curveCardinal)
+            .x((d)=>{ 
+                return xScale(d[0]); 
+            })
+            .y((d)=>{ 
+                return yScale(d[1]); 
+            });
+
+        const lines = svg.append('g')
+                .attr('class', 'monthly-trend-lines')
+            .selectAll('.monthly-trend-line-group')
+            .data(chartData).enter()
+            .append('g')
+                .attr('class', 'monthly-trend-line-group')  
+            .append('path')
+                // .attr('class', 'monthly-trend-line')
+                .attr('class', (d:any, idx:number)=>{
+
+                    const modifierClass = ['monthly-trend-line'];
+
+                    if(idx === 0){
+                        modifierClass.push('is-active');
+                    }
+
+                    return modifierClass.join(' ');
+                })
+                .attr('d', ( lineData:any )=>{
+                    const data = lineData.map((value:number, index:number)=>{
+                        return [+index, +value]
+                    });
+                    return valueline(data);
+                });
+                // .on('mouseover', (d:any, i:number)=>{
+                //     console.log(i);
+                // })
+    }
+
+    componentDidUpdate(prevProps:IProps, prevState:IState){
+        if( this.props.data !== prevProps.data || 
+            this.props.polarRegion !== prevProps.polarRegion
+        ){
+            if(this.props.data){
+                this.setChartData();
+            }
+        }
     }
 
     componentDidMount(){

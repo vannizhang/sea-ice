@@ -42,15 +42,18 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     setChartData(){
-        const minValues = this.props.data[this.props.polarRegion].map(d=>{
+
+        const data = this.props.data[this.props.polarRegion];
+
+        const minValues = data.map(d=>{
             return d.min;
         });
 
-        const maxValues = this.props.data[this.props.polarRegion].map(d=>{
+        const maxValues = data.map(d=>{
             return d.max;
         });
 
-        const years = this.props.data[this.props.polarRegion].map(d=>{
+        const years = data.map(d=>{
             return d.year;
         });
 

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import PolarToggleBtn from '../PolarToggleBtn';
 import SeaIceExtByYearChart from '../SeaIceExtByYearChart';
+import MonthlyTrendChart from '../MonthlyTrendChart';
 
 import { queryMinMaxSeaIceExtByYear, querySeaIceExtByMonth } from '../../services/sea-ice-extents'
 import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData } from '../../types';
@@ -49,7 +50,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
         // console.log(seaIceExtByYear);
 
         this.setSeaIceExtByMonthData(seaIceExtByMonth);
-        console.log(seaIceExtByMonth);
+        // console.log(seaIceExtByMonth);
     }
 
     async componentDidMount(){
@@ -71,6 +72,13 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
                     <SeaIceExtByYearChart 
                         polarRegion={this.props.polarRegion}
                         data={this.state.seaIceExtByYearData}
+                    />
+                </div>
+
+                <div className='trailer-half'>
+                    <MonthlyTrendChart 
+                        polarRegion={this.props.polarRegion}
+                        data={this.state.seaIceExtByMonthData}
                     />
                 </div>
 

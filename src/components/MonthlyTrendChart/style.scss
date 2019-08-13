@@ -1,4 +1,16 @@
 .sea-ice-monthly-trend-chart{
+
+    .monthly-trend-line {
+        fill: none;
+        stroke: rgba(89,255,252,.1);
+        stroke-width: 1px;
+    }
+
+    .monthly-trend-line.is-active {
+        fill: none;
+        stroke: rgba(89,255,252,1);
+        stroke-width: 2px;
+    }
     
     .axis {
         text {
