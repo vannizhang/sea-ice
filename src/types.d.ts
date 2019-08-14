@@ -32,6 +32,12 @@ interface IMedianSeaIceExtByMonth {
     'antarctic': Array<number>
 }
 
+interface IRecordDate {
+    year: number,
+    month: number,
+    date: number
+}
+
 export {
     PolarRegion,
     IMinMaxSeaExtByYearData,
@@ -39,5 +45,6 @@ export {
     IFeaturesSeaIceExtByMonth,
     ISeaIceExtByMonthData,
     ISeaIceExtByMonthDataItem,
-    IMedianSeaIceExtByMonth
+    IMedianSeaIceExtByMonth,
+    IRecordDate
 };

@@ -13,7 +13,8 @@ import {
     IFeaturesSeaIceExtByMonth, 
     ISeaIceExtByMonthData,
     ISeaIceExtByMonthDataItem,
-    IMedianSeaIceExtByMonth
+    IMedianSeaIceExtByMonth,
+    IRecordDate
 } from '../../types';
 
 const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
@@ -202,8 +203,30 @@ const queryMedianSeaIceExtByMonth = async():Promise<IMedianSeaIceExtByMonth>=>{
     // console.log(featuresForAntarctic, featuresForArctic);
 };
 
+const queryRecordDates = async()=>{
+
+    const queryResForAntarctic = await queryFeatures({
+        url: antarcticConfig.url,
+        where: "1=1",
+        outFields: [antarcticConfig.fields.year, antarcticConfig.fields.month, antarcticConfig.fields.date],
+        returnGeometry: false,
+        returnDistinctValues: true
+    }) as IQueryFeaturesResponse;
+
+    const recordDates:Array<IRecordDate> = queryResForAntarctic.features.map((d:IFeature)=>{
+        return {
+            year: d.attributes[antarcticConfig.fields.year],
+            month: d.attributes[antarcticConfig.fields.month],
+            date: d.attributes[antarcticConfig.fields.date]
+        }
+    });
+
+    return recordDates;
+};
+
 export {
     queryMinMaxSeaIceExtByYear,
     querySeaIceExtByMonth,
-    queryMedianSeaIceExtByMonth
+    queryMedianSeaIceExtByMonth,
+    queryRecordDates
 }

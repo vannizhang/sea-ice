@@ -5,7 +5,7 @@ import { loadCss, loadModules } from "esri-loader";
 
 import { MapConfig } from './config';
 
-import { PolarRegion } from '../../types';
+import { PolarRegion, IRecordDate } from '../../types';
 import IMapView from 'esri/views/MapView';
 import IWebMap from "esri/WebMap";
 import IFeatureLayer from "esri/layers/FeatureLayer";
@@ -15,13 +15,16 @@ import ISimpleLineSymbol from "esri/symbols/SimpleLineSymbol";
 
 interface IProps {
     polarRegion:PolarRegion,
+    activeRecordDate: IRecordDate
 };
 
 interface IState {};
 
 export default class Map extends React.PureComponent<IProps, IState> {
 
-    mapView: IMapView;
+    private mapView: IMapView;
+    private readonly LayerIdSeaIceExt = 'seaIceExt';
+    private readonly LayerIdMedianSeaIceExt = 'medianSeaIceExt';
 
     constructor(props:IProps){
         super(props);
@@ -106,6 +109,8 @@ export default class Map extends React.PureComponent<IProps, IState> {
             "esri/symbols/SimpleLineSymbol"
         ]) as Promise<Modules>);
 
+        const defExp = this.getDefExpForSeaIceExtLayer();
+
         const rendererSeaIceExt = new SimpleRenderer({ 
             symbol: new SimpleFillSymbol({
                 color: MapConfig.sea_ice_ext_feature_service.style.fillColor,
@@ -117,8 +122,9 @@ export default class Map extends React.PureComponent<IProps, IState> {
         });
 
         const seaIceExtLayer = new FeatureLayer({
+            id: this.LayerIdSeaIceExt,
             url: MapConfig.sea_ice_ext_feature_service.url[this.props.polarRegion],
-            definitionExpression: 'Rec_Year = 2015 AND Rec_Month = 12',
+            definitionExpression: defExp,
             visible: true,
             renderer: rendererSeaIceExt
         });
@@ -132,14 +138,42 @@ export default class Map extends React.PureComponent<IProps, IState> {
         });
 
         const medianSeaIceExtLayer = new FeatureLayer({
+            id: this.LayerIdMedianSeaIceExt,
             url: MapConfig.median_sea_ice_ext_feature_service.url[this.props.polarRegion],
-            definitionExpression: 'Rec_Year = 2015 AND Rec_Month = 12',
+            definitionExpression: defExp,
             visible: true,
             renderer: rendererMedianSeaIceExt
         });
 
         return [medianSeaIceExtLayer, seaIceExtLayer];
 
+    }
+
+    updateDefExp4SeaIceExtLayers(){
+
+        if(!this.mapView){
+            return;
+        }
+
+        const seaIceExtLayer = this.mapView.map.findLayerById(this.LayerIdSeaIceExt) as IFeatureLayer;
+        const medianSeaIceExtLayer = this.mapView.map.findLayerById(this.LayerIdMedianSeaIceExt) as IFeatureLayer;
+
+        if(seaIceExtLayer && medianSeaIceExtLayer){
+            const defExp = this.getDefExpForSeaIceExtLayer();
+
+            [ seaIceExtLayer, medianSeaIceExtLayer ].forEach(layer=>{
+                layer.definitionExpression = defExp;
+            })
+        }
+
+    }
+
+    getDefExpForSeaIceExtLayer(){
+
+        const year = this.props.activeRecordDate ? this.props.activeRecordDate.year : 0;
+        const month = this.props.activeRecordDate ? this.props.activeRecordDate.month : 0;
+
+        return `${MapConfig.median_sea_ice_ext_feature_service.fields.year} = ${year} AND ${MapConfig.median_sea_ice_ext_feature_service.fields.month} = ${month}`;
     }
 
     mapViewOnReadyHandler(mapView:IMapView){
@@ -149,6 +183,10 @@ export default class Map extends React.PureComponent<IProps, IState> {
     componentDidUpdate(prevProps:IProps, prevState:IState){
         if(this.props.polarRegion !== prevProps.polarRegion){
             this.toggleWebMap();
+        }
+
+        if(this.props.activeRecordDate !== prevProps.activeRecordDate){
+            this.updateDefExp4SeaIceExtLayers();
         }
     }
 

@@ -7,11 +7,12 @@ import SeaIceExtByYearChart from '../SeaIceExtByYearChart';
 import MonthlyTrendChart from '../MonthlyTrendChart';
 
 import { queryMinMaxSeaIceExtByYear, querySeaIceExtByMonth, queryMedianSeaIceExtByMonth } from '../../services/sea-ice-extents'
-import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData, IMedianSeaIceExtByMonth } from '../../types';
+import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData, IMedianSeaIceExtByMonth, IRecordDate } from '../../types';
 
 interface IProps {
     polarRegion:PolarRegion, 
-    polarRegionOnChange: ((value:string)=>void)
+    polarRegionOnChange: ((value:string)=>void),
+    activeRecordDate: IRecordDate
 };
 
 interface IState {
