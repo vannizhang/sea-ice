@@ -3,15 +3,18 @@ import * as React from 'react';
 
 import Map from '../Map';
 import InfoPanel from '../InfoPanel';
-import { PolarRegion, IRecordDate } from '../../types';
-import { queryRecordDates } from '../../services/sea-ice-extents';
+import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData, IMedianSeaIceExtByMonth, IRecordDate } from '../../types';
+import { queryMinMaxSeaIceExtByYear, querySeaIceExtByMonth, queryMedianSeaIceExtByMonth, queryRecordDates } from '../../services/sea-ice-extents';
 
 interface IProps {};
 
 interface IState {
     polarRegion:PolarRegion,
     recordDates: Array<IRecordDate>
-    activeRecordDate: IRecordDate
+    activeRecordDate: IRecordDate,
+    seaIceExtByYearData:IMinMaxSeaExtByYearData,
+    seaIceExtByMonthData:ISeaIceExtByMonthData,
+    medianSeaIceExtByMonthData:IMedianSeaIceExtByMonth
 };
 
 export default class App extends React.PureComponent<IProps, IState> {
@@ -22,7 +25,10 @@ export default class App extends React.PureComponent<IProps, IState> {
         this.state = {
             polarRegion: 'arctic',
             recordDates: [],
-            activeRecordDate: null
+            activeRecordDate: null,
+            seaIceExtByYearData: null,
+            seaIceExtByMonthData: null,
+            medianSeaIceExtByMonthData: null
         }
 
         this.updatePolarRegion = this.updatePolarRegion.bind(this);
@@ -45,10 +51,20 @@ export default class App extends React.PureComponent<IProps, IState> {
         });
     }
 
-    async setRecordDates(){
-        const recordDates = await queryRecordDates();
-        // console.log(recordDates);
+    setSeaIceExtByYearData(data:IMinMaxSeaExtByYearData){
+        this.setState({
+            seaIceExtByYearData: data
+        });
+    }
 
+    setSeaIceExtByMonthData(data:ISeaIceExtByMonthData, medianData:IMedianSeaIceExtByMonth){
+        this.setState({
+            seaIceExtByMonthData: data,
+            medianSeaIceExtByMonthData: medianData
+        });
+    }
+
+    setRecordDates(recordDates:Array<IRecordDate>){
         this.setState({
             recordDates
         }, ()=>{
@@ -56,8 +72,26 @@ export default class App extends React.PureComponent<IProps, IState> {
         })
     }
 
+    async loadAppData(){
+        const seaIceExtByYear = await queryMinMaxSeaIceExtByYear();
+
+        const seaIceExtByMonth = await querySeaIceExtByMonth();
+
+        const medianSeaIceExtByMonth = await queryMedianSeaIceExtByMonth();
+
+        const recordDates = await queryRecordDates();
+
+        this.setSeaIceExtByYearData(seaIceExtByYear);
+        // console.log(seaIceExtByYear);
+
+        this.setSeaIceExtByMonthData(seaIceExtByMonth, medianSeaIceExtByMonth);
+        // console.log(seaIceExtByMonth);
+
+        this.setRecordDates(recordDates);
+    }
+
     componentDidMount(){
-        this.setRecordDates();
+        this.loadAppData();
     }
 
     render(){
@@ -71,6 +105,9 @@ export default class App extends React.PureComponent<IProps, IState> {
                     polarRegion={this.state.polarRegion}
                     polarRegionOnChange={this.updatePolarRegion}
                     activeRecordDate={this.state.activeRecordDate}
+                    seaIceExtByYearData={this.state.seaIceExtByYearData}
+                    seaIceExtByMonthData={this.state.seaIceExtByMonthData}
+                    medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
                 />
             </div>
         )
