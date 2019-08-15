@@ -3,8 +3,22 @@ import * as React from 'react';
 
 import Map from '../Map';
 import InfoPanel from '../InfoPanel';
-import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData, IMedianSeaIceExtByMonth, IRecordDate } from '../../types';
-import { queryMinMaxSeaIceExtByYear, querySeaIceExtByMonth, queryMedianSeaIceExtByMonth, queryRecordDates } from '../../services/sea-ice-extents';
+import TimeControl from '../TimeControl';
+
+import { 
+    PolarRegion, 
+    IMinMaxSeaExtByYearData, 
+    ISeaIceExtByMonthData, 
+    IMedianSeaIceExtByMonth, 
+    IRecordDate 
+} from '../../types';
+
+import { 
+    queryMinMaxSeaIceExtByYear, 
+    querySeaIceExtByMonth, 
+    queryMedianSeaIceExtByMonth, 
+    queryRecordDates 
+} from '../../services/sea-ice-extents';
 
 interface IProps {};
 
@@ -108,6 +122,12 @@ export default class App extends React.PureComponent<IProps, IState> {
                     seaIceExtByYearData={this.state.seaIceExtByYearData}
                     seaIceExtByMonthData={this.state.seaIceExtByMonthData}
                     medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
+                />
+                <TimeControl 
+                    polarRegion={this.state.polarRegion}
+                    recordDates={this.state.recordDates}
+                    activeRecordDate={this.state.activeRecordDate}
+                    seaIceExtByMonthData={this.state.seaIceExtByMonthData}
                 />
             </div>
         )
