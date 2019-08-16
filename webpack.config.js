@@ -60,7 +60,21 @@ module.exports =  (env, options)=> {
             }),
             new HtmlWebpackPlugin({
                 template: './src/index.template.html',
-                filename: 'index.html'
+                filename: 'index.html',
+                minify: {
+                    html5                          : true,
+                    collapseWhitespace             : true,
+                    minifyCSS                      : true,
+                    minifyJS                       : true,
+                    minifyURLs                     : false,
+                    removeComments                 : true,
+                    removeEmptyAttributes          : true,
+                    removeOptionalTags             : true,
+                    removeRedundantAttributes      : true,
+                    removeScriptTypeAttributes     : true,
+                    removeStyleLinkTypeAttributese : true,
+                    useShortDoctype                : true
+                }
             })
         ]
     }
