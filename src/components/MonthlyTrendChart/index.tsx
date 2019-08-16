@@ -9,6 +9,7 @@ interface IProps {
     data: ISeaIceExtByMonthData,
     medianData: IMedianSeaIceExtByMonth,
     polarRegion:PolarRegion,
+    yearOnHover:number
 };
 
 interface IState {
@@ -18,12 +19,14 @@ interface IState {
     xScale: d3.ScaleLinear<number, number>,
     yScale: d3.ScaleLinear<number, number>,
     chartData: Array<Array<number>>,
-    medianData:Array<number>
+    medianData:Array<number>,
+    years:Array<number>
 };
 
 export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IState> {
 
     private containerRef = React.createRef<HTMLDivElement>();
+    private trendLineClassName = 'monthly-trend-line';
 
     constructor(props:IProps){
         super(props);
@@ -35,7 +38,8 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             xScale: null,
             yScale: null,
             chartData: [],
-            medianData: []
+            medianData: [],
+            years: []
         };
     }
     
@@ -65,17 +69,16 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         const data = this.props.data[this.props.polarRegion]
                 .filter(d=>d.values.length === 12);
         
-        // const years = data.map(d=>d.year);
-
         const chartData = data.map(d=>d.values);
 
         const medianData = this.props.medianData[this.props.polarRegion];
 
-        // console.log(years, chartData);
+        const years = data.map(d=>d.year);
 
         this.setState({
             chartData,
-            medianData
+            medianData,
+            years
         },()=>{
             this.drawChart();
         });
@@ -210,14 +213,15 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
                 // .attr('class', 'monthly-trend-line')
                 .attr('class', (d:any, idx:number)=>{
 
-                    const modifierClass = ['monthly-trend-line'];
+                    const modifierClass = [this.trendLineClassName];
 
-                    if(idx === chartData.length - 1){
-                        modifierClass.push('is-active');
-                    }
+                    // if(idx === chartData.length - 1){
+                    //     modifierClass.push('is-active');
+                    // }
 
                     return modifierClass.join(' ');
                 })
+                .attr('data-index', (d:any, idx:number)=>idx)
                 .attr('d', ( lineData:any )=>{
                     const data = lineData.map((value:number, index:number)=>{
                         return [+index, +value]
@@ -240,14 +244,36 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             });
     }
 
+    highlightYearOnHover(){
+        const { yearOnHover } = this.props;
+        const { years } = this.state;
+
+        const yearOnHoverIndex = years.indexOf(yearOnHover);
+
+        d3.selectAll('.' + this.trendLineClassName).classed('is-active', false);
+
+        if(yearOnHoverIndex !== -1){
+            const lineToHighlight = d3.select(`.${this.trendLineClassName}[data-index='${yearOnHoverIndex}']`);
+            lineToHighlight.classed('is-active', true);
+        } 
+    }
+
     componentDidUpdate(prevProps:IProps, prevState:IState){
-        if( this.props.data !== prevProps.data || 
-            this.props.polarRegion !== prevProps.polarRegion
-        ){
-            if(this.props.data){
+
+        if(this.props.data){
+            
+            if( this.props.data !== prevProps.data || 
+                this.props.polarRegion !== prevProps.polarRegion
+            ){
                 this.setChartData();
             }
+
+            if( this.props.yearOnHover !== prevProps.yearOnHover){
+                this.highlightYearOnHover();
+            }
         }
+
+
     }
 
     componentDidMount(){

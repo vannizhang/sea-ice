@@ -9,6 +9,7 @@ import config from './config';
 interface IProps {
     data: IMinMaxSeaExtByYearData
     polarRegion:PolarRegion,
+    onHover:(year?:number)=>void
 };
 
 interface IState {
@@ -178,7 +179,8 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     drawBars(){
-        const { svg, xScale0, xScale1, yScale, height, chartData } = this.state;
+        const { onHover } = this.props;
+        const { svg, xScale0, xScale1, yScale, height, chartData, years } = this.state;
 
         const barGroupClassName = 'sea-ice-ext-by-year-bar-group';
 
@@ -212,7 +214,14 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             .attr("y", (d:number)=>{ 
                 return yScale(d); 
             })
-            .style('opacity', .8);
+            .style('opacity', .8)
+            .on('mouseover', (d:any, i:number)=>{
+                // console.log(years[i]);
+                onHover(years[i])
+            })
+            .on('mouseout', (d:any, i:number)=>{
+                onHover(undefined);
+            });
     }
 
     componentDidUpdate(prevProps:IProps, prevState:IState){

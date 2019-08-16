@@ -19,17 +19,35 @@ interface IProps {
 };
 
 interface IState {
+    // year value returned by the mouse hover on sea ice ext by year bar chart
+    yearOnHover:number
 };
 
 export default class InfoPanel extends React.PureComponent<IProps, IState> {
     constructor(props:IProps){
         super(props);
+
+        this.state = {
+            yearOnHover: undefined
+        };
+
+        this.seaIceExtByYearChartOnHover = this.seaIceExtByYearChartOnHover.bind(this);
     }
 
     // componentDidMount(){
     // }
 
+    seaIceExtByYearChartOnHover(year:number){
+        // console.log(year);
+        this.setState({
+            yearOnHover: year
+        });
+    }
+
     render(){
+
+        const { yearOnHover } = this.state;
+
         return (
             <div id='infoPanelDiv' className='info-panel-container'>
 
@@ -44,6 +62,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
                     <SeaIceExtByYearChart 
                         polarRegion={this.props.polarRegion}
                         data={this.props.seaIceExtByYearData}
+                        onHover={this.seaIceExtByYearChartOnHover}
                     />
                 </div>
 
@@ -52,6 +71,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
                         polarRegion={this.props.polarRegion}
                         data={this.props.seaIceExtByMonthData}
                         medianData={this.props.medianSeaIceExtByMonthData}
+                        yearOnHover={yearOnHover}
                     />
                 </div>
 
