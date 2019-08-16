@@ -1,0 +1,98 @@
+$height: 100px;
+
+#time-control-container{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 20px;
+
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.time-control {
+    cursor: default;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: hidden;
+    height: $height;
+    box-shadow: 0 0 2px 2px rgba(0,0,0,0.2);    
+    background: #fff;
+    pointer-events: all;
+
+    .widget-btn {
+        font-size: 14px;
+        color: #6e6e6e;
+        height: $height;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        cursor: pointer;
+        text-align: center;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 125ms ease-in-out;
+    }
+    
+    .play-btn{
+        flex: none;
+        width: 64px;
+        border-right: 1px solid rgba(110,110,110,0.3);
+    }
+
+    .previous-btn{
+        flex: none;
+        width: 42px;
+        padding-left: .5rem;
+        border-left: 1px solid rgba(110,110,110,0.3);
+    }
+
+    .next-btn{
+        flex: none;
+        width: 42px;
+        padding-right: .5rem;
+    }
+
+    .info-window{
+        height: $height;
+        min-width: 160px;
+        flex: none;
+        font-weight: 400;
+        padding: 0 1rem;
+        margin: 0;
+        overflow: hidden;
+        text-align: center;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: flex-start;
+        border-right: 1px solid rgba(110,110,110,0.3);
+        line-height: 12px;
+        box-sizing: border-box;
+    }
+
+    .time-slider{
+        height: $height;
+
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+
+        .calcite-slider{
+            width: 350px;
+            
+            label {
+                margin: 0;
+            }
+        }
+
+        // .slider-ticks-wrap{
+        // }
+    }
+}

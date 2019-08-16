@@ -25,6 +25,7 @@ export default class Map extends React.PureComponent<IProps, IState> {
     private mapView: IMapView;
     private readonly LayerIdSeaIceExt = 'seaIceExt';
     private readonly LayerIdMedianSeaIceExt = 'medianSeaIceExt';
+    private delay:NodeJS.Timeout;
 
     constructor(props:IProps){
         super(props);
@@ -110,6 +111,7 @@ export default class Map extends React.PureComponent<IProps, IState> {
         ]) as Promise<Modules>);
 
         const defExp = this.getDefExpForSeaIceExtLayer();
+        // console.log(defExp);
 
         const rendererSeaIceExt = new SimpleRenderer({ 
             symbol: new SimpleFillSymbol({
@@ -168,16 +170,31 @@ export default class Map extends React.PureComponent<IProps, IState> {
 
     }
 
+    activeRecordDateOnChangeHandler(){
+
+        clearTimeout(this.delay);
+
+        this.delay = setTimeout(()=>{
+            this.updateDefExp4SeaIceExtLayers();
+        }, 500);
+    }
+
     getDefExpForSeaIceExtLayer(){
 
-        const year = this.props.activeRecordDate ? this.props.activeRecordDate.year : 0;
-        const month = this.props.activeRecordDate ? this.props.activeRecordDate.month : 0;
+        const { activeRecordDate } = this.props;
+
+        const year = activeRecordDate ? activeRecordDate.year : 0;
+        const month = activeRecordDate ? activeRecordDate.month : 0;
 
         return `${MapConfig.median_sea_ice_ext_feature_service.fields.year} = ${year} AND ${MapConfig.median_sea_ice_ext_feature_service.fields.month} = ${month}`;
     }
 
     mapViewOnReadyHandler(mapView:IMapView){
         this.mapView = mapView;
+
+        // the activeRecordDate data might not be ready at the time when map view get initialized,
+        // therefore need to call this method to make sure the sea ice ext layer will be displayed on the map once it's ready
+        this.updateDefExp4SeaIceExtLayers();
     }
 
     componentDidUpdate(prevProps:IProps, prevState:IState){
@@ -186,7 +203,8 @@ export default class Map extends React.PureComponent<IProps, IState> {
         }
 
         if(this.props.activeRecordDate !== prevProps.activeRecordDate){
-            this.updateDefExp4SeaIceExtLayers();
+            // this.updateDefExp4SeaIceExtLayers();
+            this.activeRecordDateOnChangeHandler();
         }
     }
 

@@ -46,6 +46,7 @@ export default class App extends React.PureComponent<IProps, IState> {
         }
 
         this.updatePolarRegion = this.updatePolarRegion.bind(this);
+        this.timeControlOnValueChange = this.timeControlOnValueChange.bind(this);
     }
 
     updatePolarRegion(polarRegion:PolarRegion){
@@ -55,10 +56,16 @@ export default class App extends React.PureComponent<IProps, IState> {
     }
 
     updateActiveRecordDate(index=-1){
-        
-        index = ( index === -1 ) ? this.state.recordDates.length - 1 : index; 
 
-        const activeRecordDate = this.state.recordDates[index];
+        const { recordDates } = this.state;
+
+        if(!recordDates.length){
+            return;
+        }
+        
+        index = ( index === -1 ) ? recordDates.length - 1 : index; 
+
+        const activeRecordDate = recordDates[index];
 
         this.setState({
             activeRecordDate
@@ -104,6 +111,10 @@ export default class App extends React.PureComponent<IProps, IState> {
         this.setRecordDates(recordDates);
     }
 
+    timeControlOnValueChange(index:number){
+        this.updateActiveRecordDate(index);
+    }
+
     componentDidMount(){
         this.loadAppData();
     }
@@ -126,8 +137,9 @@ export default class App extends React.PureComponent<IProps, IState> {
                 <TimeControl 
                     polarRegion={this.state.polarRegion}
                     recordDates={this.state.recordDates}
-                    activeRecordDate={this.state.activeRecordDate}
+                    // activeRecordDate={this.state.activeRecordDate}
                     seaIceExtByMonthData={this.state.seaIceExtByMonthData}
+                    onValueChange={this.timeControlOnValueChange}
                 />
             </div>
         )

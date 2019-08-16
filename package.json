@@ -51,7 +51,7 @@
     "d3": "^5.9.7",
     "es6-promise": "^4.2.8",
     "esri-loader": "^2.10.0",
-    "helper-toolkit-ts": "^1.1.3",
+    "helper-toolkit-ts": "^1.1.4",
     "isomorphic-fetch": "^2.2.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
