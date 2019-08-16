@@ -1,6 +1,7 @@
 @import '../../style/color.scss';
 $height: 100px;
 $textColor: rgba(255,255,255,.9);
+$textColorLighter: rgba(255,255,255,.7);
 $iconColor: rgba(255,255,255,.5);
 
 #time-control-container{
@@ -108,5 +109,9 @@ $iconColor: rgba(255,255,255,.5);
     svg {
         stroke: $iconColor;
         fill: $iconColor;
+    }
+
+    .lighter-text {
+        color: $textColorLighter
     }
 }

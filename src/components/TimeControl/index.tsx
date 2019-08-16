@@ -6,15 +6,16 @@ import { dateFns } from 'helper-toolkit-ts';
 import { 
     PolarRegion, 
     ISeaIceExtByMonthData, 
-    IRecordDate 
+    IRecordDate,
+    IMedianSeaIceExtByMonth
 } from '../../types';
-import { number } from 'prop-types';
 
 interface IProps {
     polarRegion:PolarRegion,
     recordDates: Array<IRecordDate>
-    // activeRecordDate: IRecordDate,
+    activeRecordDate: IRecordDate,
     seaIceExtByMonthData:ISeaIceExtByMonthData,
+    medianSeaIceExtByMonthData:IMedianSeaIceExtByMonth
     onValueChange: (index:number)=>void
 };
 
@@ -144,11 +145,16 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
     }
 
     getSeaIceExtArea(){
-        const { polarRegion } = this.props;
+        const { polarRegion, medianSeaIceExtByMonthData, activeRecordDate } = this.props;
         const { seaIceExtAreaValues, value } = this.state;
 
+        const medianVal = activeRecordDate ? medianSeaIceExtByMonthData[polarRegion][activeRecordDate.month - 1] : 0;
         const values = seaIceExtAreaValues[polarRegion];
-        return values[value] || 0;
+
+        return {
+            area: values[value] || 0,
+            median: medianVal
+        };
     }
 
     getSeaIceExtInfo(){
@@ -162,10 +168,17 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
         const activeRecordDateLabel = this.getLabelForActiveDate();
         const areaForActiveRecordDate = this.getSeaIceExtArea();
 
+        const areaDiff = areaForActiveRecordDate.area - areaForActiveRecordDate.median;
+        const areaDiffInPct = (( Math.abs(areaDiff) /areaForActiveRecordDate.median ) * 100).toFixed(1);
+        const areaDiffDesc = areaDiff > 0 
+        ? <span>{areaDiffInPct}% above median</span>
+        : <span>{areaDiffInPct}% below median</span>;
+
         return (
             <div className='info-window'>
                 <span className='font-size--3'>{activeRecordDateLabel}</span>
-                <span className='font-size--1'>{areaForActiveRecordDate} million km<sup>2</sup></span>
+                <span className='font-size--1'>{areaForActiveRecordDate.area} million km<sup>2</sup></span>
+                <span className='font-size--3'>{areaDiffInPct !== '0.0' ? areaDiffDesc : 'same as median'}</span>
             </div>
         )
     }

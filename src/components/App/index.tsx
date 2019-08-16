@@ -137,8 +137,9 @@ export default class App extends React.PureComponent<IProps, IState> {
                 <TimeControl 
                     polarRegion={this.state.polarRegion}
                     recordDates={this.state.recordDates}
-                    // activeRecordDate={this.state.activeRecordDate}
+                    activeRecordDate={this.state.activeRecordDate}
                     seaIceExtByMonthData={this.state.seaIceExtByMonthData}
+                    medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
                     onValueChange={this.timeControlOnValueChange}
                 />
             </div>
