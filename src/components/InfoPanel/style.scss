@@ -1,3 +1,5 @@
+@import '../../style/color.scss';
+
 #infoPanelDiv {
     position: absolute;
     top: 1rem;
@@ -6,5 +8,7 @@
     box-sizing: border-box;
     // width: 400px;
     min-height: 200px;
-    background-color: rgba(0,48,77,0.85);
+    background-color: $themeColorAlpha85;
+    box-shadow: 0 0 2px 2px rgba(0,0,0,0.1);    
+    margin-bottom: 150px;
 }

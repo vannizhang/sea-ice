@@ -1,20 +1,22 @@
+@import '../../style/color.scss';
+
 .sea-ice-monthly-trend-chart{
 
     .monthly-trend-line {
         fill: none;
-        stroke: rgba(89,255,252,.15);
+        stroke: $secIceExtColorAlpha15;
         stroke-width: .8px;
     }
 
     .monthly-trend-line.is-active {
         fill: none;
-        stroke: rgba(89,255,252,1);
-        stroke-width: 1.5px;
+        stroke: $secIceExtColor;
+        stroke-width: 2px;
     }
 
     .median-monthly-trend-line{
         fill: none;
-        stroke: #fff766;
+        stroke: $medianSecIceExtColor;
         stroke-width: 1.5px;
     }
     

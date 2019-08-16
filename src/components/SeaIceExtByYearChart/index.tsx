@@ -125,8 +125,8 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         this.state.xScale0.domain(xDomain0).range([0, this.state.width]);
 
         const xDomain1 = d3.range(this.state.chartData.length);
-        this.state.xScale1.domain(xDomain1).range([0, this.state.xScale0.bandwidth()*.6]);
-        
+        // this.state.xScale1.domain(xDomain1).range([0, this.state.xScale0.bandwidth()*.6]);
+        this.state.xScale1.domain(xDomain1).range([0, this.state.xScale0.bandwidth()*1.1]);
     }
 
     updateDomainForYScale = ()=>{
@@ -199,8 +199,11 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
                 return i === 0 ? config.color.maxVal : config.color.minVal
             })
             .attr("transform", (d:any, i:number)=>{ 
-                return "translate(" + xScale1(i) + ",0)"; 
+                return "translate(" + 0 + ",0)"; 
             })
+            // .attr("transform", (d:any, i:number)=>{ 
+            //     return "translate(" + xScale1(i) + ",0)"; 
+            // })
         .selectAll("rect")
             .data((d:any)=>{ return d; })
         .enter().append("rect")

@@ -1,4 +1,7 @@
+@import '../../style/color.scss';
 $height: 100px;
+$textColor: rgba(255,255,255,.9);
+$iconColor: rgba(255,255,255,.5);
 
 #time-control-container{
     position: absolute;
@@ -19,9 +22,11 @@ $height: 100px;
     justify-content: flex-start;
     overflow: hidden;
     height: $height;
-    box-shadow: 0 0 2px 2px rgba(0,0,0,0.2);    
-    background: #fff;
+    box-shadow: 0 0 2px 2px rgba(0,0,0,0.1);    
+    color: $textColor;
+    background: $themeColorAlpha85;
     pointer-events: all;
+    
 
     .widget-btn {
         font-size: 14px;
@@ -37,6 +42,10 @@ $height: 100px;
         justify-content: center;
         align-items: center;
         transition: background-color 125ms ease-in-out;
+    }
+
+    .widget-btn:hover{
+        background: rgba(0,0,0,.1);
     }
     
     .play-btn{
@@ -94,5 +103,10 @@ $height: 100px;
 
         // .slider-ticks-wrap{
         // }
+    }
+
+    svg {
+        stroke: $iconColor;
+        fill: $iconColor;
     }
 }
