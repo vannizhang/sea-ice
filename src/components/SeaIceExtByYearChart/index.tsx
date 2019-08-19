@@ -280,7 +280,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         });
     }
 
-    getInfoWindow(){
+    getInfoDiv(){
 
         const { dataOnHover } = this.state;
 
@@ -288,7 +288,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             return (
                 <div className='info-window font-size--3'>
                     <div className=''>
-                        <span className=''>Sea Ice Extent in million km<sup>2</sup></span>
+                        <span className=''>Annual Sea Ice Extent in million km<sup>2</sup></span>
                     </div>
                     <div className='text-right'>
                         <span className='margin-right-half max-value'>Max Extent</span>
@@ -329,11 +329,11 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     render(){
-        const InfoWindow = this.getInfoWindow();
+        const InfoDiv = this.getInfoDiv();
 
         return (
             <div className='sea-ice-ext-by-year-chart-wrap'>
-                { InfoWindow }
+                { InfoDiv }
                 <div ref={this.containerRef} style={{
                     width: '400px',
                     height: '250px'

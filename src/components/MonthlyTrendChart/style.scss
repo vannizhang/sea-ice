@@ -1,5 +1,33 @@
 @import '../../style/color.scss';
 
+.sea-ice-monthly-trend-chart-wrap {
+    .info-window {
+        padding: 0 1rem;
+        display: flex;
+        color: rgba(255,255,255,.75);
+
+        div {
+            flex-grow: 1;
+            flex-shrink: 0;
+        }
+
+        .sea-ice-ext-color {
+            color: $secIceExtColorAlpha5
+        }
+
+        .sea-ice-ext-color.is-bright {
+            color: $secIceExtColor
+        }
+
+        .median-sea-ice-ext-color {
+            color: $medianSecIceExtColor;
+            opacity: .9;
+        }
+    }
+
+
+}
+
 .sea-ice-monthly-trend-chart{
 
     .monthly-trend-line {
@@ -19,7 +47,7 @@
         stroke: $medianSecIceExtColor;
         stroke-width: 1.5px;
     }
-    
+
     .axis {
         text {
             fill: rgba(255,255,255,.5);

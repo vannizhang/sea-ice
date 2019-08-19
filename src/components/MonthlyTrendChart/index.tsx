@@ -258,6 +258,26 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         } 
     }
 
+    getInfoDiv(){
+
+        const { yearOnHover } = this.props;
+
+        const titleStr = 'Sea Ice Extent Monthly Trend';
+
+        const title = yearOnHover 
+            ? <div className='sea-ice-ext-color is-bright'><span>{yearOnHover} {titleStr}</span></div>
+            : <div className='sea-ice-ext-color'><span>{titleStr}</span></div>;
+
+        return (
+            <div className='info-window font-size--3'>
+                {title}
+                <div className='median-sea-ice-ext-color text-right'>
+                   <span>monthly median</span> 
+                </div>
+            </div>
+        )
+    }
+
     componentDidUpdate(prevProps:IProps, prevState:IState){
 
         if(this.props.data){
@@ -281,11 +301,16 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     render(){
+        const InfoDiv = this.getInfoDiv();
+
         return (
-            <div className='sea-ice-monthly-trend-chart-wrap' ref={this.containerRef} style={{
-                width: '400px',
-                height: '250px'
-            }}></div>
+            <div className='sea-ice-monthly-trend-chart-wrap'>
+                { InfoDiv }
+                <div ref={this.containerRef} style={{
+                    width: '400px',
+                    height: '250px'
+                }}></div>
+            </div>
         );
     }
 }
