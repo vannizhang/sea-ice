@@ -49,7 +49,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
         const { yearOnHover } = this.state;
 
         return (
-            <div id='infoPanelDiv' className='info-panel-container'>
+            <div id='infoPanelDiv' className='info-panel-container fancy-scrollbar'>
 
                 <div className='trailer-half'>
                     <PolarToggleBtn 

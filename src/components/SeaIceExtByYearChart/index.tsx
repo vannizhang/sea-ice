@@ -6,6 +6,12 @@ import * as d3 from 'd3';
 import { IMinMaxSeaExtByYearData, PolarRegion } from '../../types';
 import config from './config';
 
+interface IDataOnHover {
+    year:number,
+    max:number,
+    min:number
+};
+
 interface IProps {
     data: IMinMaxSeaExtByYearData
     polarRegion:PolarRegion,
@@ -20,7 +26,8 @@ interface IState {
     xScale1: d3.ScaleBand<number>,
     yScale: d3.ScaleLinear<number, number>,
     chartData: Array<Array<number>>,
-    years:Array<number>
+    years:Array<number>,
+    dataOnHover:IDataOnHover
 };
 
 export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IState> {
@@ -38,7 +45,8 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             xScale1: null,
             yScale: null,
             chartData: [],
-            years: null
+            years: null,
+            dataOnHover:null
         };
     }
 
@@ -179,15 +187,33 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     drawBars(){
-        const { onHover } = this.props;
-        const { svg, xScale0, xScale1, yScale, height, chartData, years } = this.state;
+        
+        const { svg, xScale0, xScale1, yScale, width, height, chartData } = this.state;
 
         const barGroupClassName = 'sea-ice-ext-by-year-bar-group';
+        const backgroundRectClassName = 'invisible-background-rect';
 
         const barGroups = svg.selectAll('.' + barGroupClassName);
+        const invisibleBackgroundRect = svg.selectAll('.' + backgroundRectClassName);
 
         if(barGroups){
             barGroups.remove().exit();
+        }
+
+        // need to add an invisible rect with same size of the container to detect when the mouse is out of the chart area
+        // the content in the chart info window will only be reset when mouse is out of this rect
+        if(!invisibleBackgroundRect.size()){
+            svg.append("rect")
+            .attr('class', backgroundRectClassName)
+            .attr("width", width + 10)
+            .attr("height", height + 20)
+            .attr("transform", (d:any, i:number)=>{ 
+                return "translate(" + -5 + ",0)"; 
+            })
+            .style('opacity', 0)
+            .on('mouseout', ()=>{
+                this.onHoverHandler()
+            })
         }
 
         svg.append("g")
@@ -195,8 +221,11 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             .selectAll("g")
             .data(chartData)
         .enter().append("g")
-            .style("fill", (d:any, i:number)=>{
-                return i === 0 ? config.color.maxVal : config.color.minVal
+            // .style("fill", (d:any, i:number)=>{
+            //     return i === 0 ? config.color.maxVal : config.color.minVal
+            // })
+            .attr("class", (d:any, i:number)=>{
+                return i === 0 ? 'max-val-bars' : 'min-val-bars'
             })
             .attr("transform", (d:any, i:number)=>{ 
                 return "translate(" + 0 + ",0)"; 
@@ -220,11 +249,67 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             .style('opacity', .8)
             .on('mouseover', (d:any, i:number)=>{
                 // console.log(years[i]);
-                onHover(years[i])
+                // onHover(years[i]);
+                this.onHoverHandler(i);
             })
             .on('mouseout', (d:any, i:number)=>{
-                onHover(undefined);
+                // onHover(undefined);
+                // this.onHoverHandler()
             });
+    }
+
+    onHoverHandler(index?:number){
+        const { onHover } = this.props;
+        const { chartData, years } = this.state;
+
+        const year = years[index];
+        const max = chartData[0][index];
+        const min = chartData[1][index];
+        // console.log(year, max, min);
+
+        const dataOnHover = (year && max && min) 
+            ? {
+                year, max, min
+            } as IDataOnHover
+            : undefined;
+
+        this.setState({
+            dataOnHover
+        }, ()=>{
+            onHover(year);
+        });
+    }
+
+    getInfoWindow(){
+
+        const { dataOnHover } = this.state;
+
+        if(!dataOnHover){
+            return (
+                <div className='info-window font-size--3'>
+                    <div className=''>
+                        <span className=''>Sea Ice Extent in million km<sup>2</sup></span>
+                    </div>
+                    <div className='text-right'>
+                        <span className='margin-right-half max-value'>Max Extent</span>
+                        <span className='min-value'>Min Extent</span>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className='info-window font-size--3'>
+                <div className=''>
+                    <span className=''>{dataOnHover.year} Sea Ice Extent in million km<sup>2</sup></span>
+                </div>
+                <div className='text-right'>
+                    <span className='margin-right-half'></span>
+                    <span className='margin-right-half max-value'>Max: {dataOnHover.max}</span>
+                    <span className='min-value'>Min: {dataOnHover.min}</span>
+                </div>
+            </div>
+        );
     }
 
     componentDidUpdate(prevProps:IProps, prevState:IState){
@@ -244,11 +329,16 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     render(){
+        const InfoWindow = this.getInfoWindow();
+
         return (
-            <div className='sea-ice-ext-by-year-chart-wrap' ref={this.containerRef} style={{
-                width: '400px',
-                height: '250px'
-            }}></div>
+            <div className='sea-ice-ext-by-year-chart-wrap'>
+                { InfoWindow }
+                <div ref={this.containerRef} style={{
+                    width: '400px',
+                    height: '250px'
+                }}></div>
+            </div>
         );
     }
 }

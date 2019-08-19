@@ -1,10 +1,40 @@
+$maxValColor: rgba(89,255,252,.45);
+$minValColor: rgba(89,255,252,.65);
+
 .sea-ice-ext-by-year-chart-wrap{
     // width: 100%;
     // height: 250px;
     // background: rgba(0,0,0,.1);
 
+    .info-window {
+        padding: 0 1rem;
+        display: flex;
+        color: rgba(255,255,255,.75);
+
+        div {
+            flex-grow: 1;
+            flex-shrink: 0;
+        }
+
+        .min-value {
+            color: $minValColor;
+        }
+        
+        .max-value {
+            color: $maxValColor;
+        }
+    }
+
     .sea-ice-ext-by-year-bar-group {
         cursor: pointer;
+    }
+
+    .min-val-bars {
+        fill: $minValColor;
+    }
+
+    .max-val-bars{
+        fill: $maxValColor;
     }
 
     .axis {
