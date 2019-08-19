@@ -25,9 +25,9 @@ export default class PolarToggleBtn extends React.PureComponent<IProps, IState> 
         const isActive = this.props.isActive ? 'is-active' : '';
 
         return (
-            <span className={`polar-toggle-btn font-size-2 avenir-light ${isActive}`} onClick={this.onClickHandler}>
+            <div className={`polar-toggle-btn font-size-2 text-center avenir-light ${isActive}`} onClick={this.onClickHandler}>
                 {this.props.label}
-            </span>
+            </div>
         );
     }
 }

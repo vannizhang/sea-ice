@@ -1,12 +1,24 @@
+@import '../../style/color.scss';
+
+.polar-toggle-btns{
+    display: flex;
+    padding-bottom: .25rem;
+}
+
 .polar-toggle-btn {
+    flex-grow: 1;
+    flex-shrink: 0;
     color: rgba(255,255,255,.5);
     cursor: pointer;
+    border-bottom: 2px solid rgba(255,255,255, .2);
+    padding-bottom: .5rem;
 }
 
 .polar-toggle-btn.is-active {
     color: rgba(255,255,255, .9);
+    border-bottom: 2px solid $secIceExtColorAlpha75;
 }
 
-.polar-toggle-btn:nth-child(1){
-    margin-right: 1rem;
-}
+// .polar-toggle-btn:nth-child(1){
+//     margin-right: 1rem;
+// }
