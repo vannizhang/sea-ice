@@ -205,10 +205,10 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         if(!invisibleBackgroundRect.size()){
             svg.append("rect")
             .attr('class', backgroundRectClassName)
-            .attr("width", width + 10)
+            .attr("width", width + 30)
             .attr("height", height + 20)
             .attr("transform", (d:any, i:number)=>{ 
-                return "translate(" + -5 + ",0)"; 
+                return "translate(" + -20 + ",0)"; 
             })
             .style('opacity', 0)
             .on('mouseout', ()=>{
@@ -236,6 +236,8 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         .selectAll("rect")
             .data((d:any)=>{ return d; })
         .enter().append("rect")
+            .attr('class', 'bar-rect')
+            .attr('data-index', (d:any, idx:number)=>idx)
             .attr("width", xScale1.bandwidth())
             .attr("height", (d:number)=>{ 
                 return height - yScale(d); 
@@ -258,6 +260,22 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             });
     }
 
+    toggleHoverEffect(index?:number){
+
+        const barRectClassName = 'bar-rect';
+
+        if(typeof index === 'number'){
+            d3.selectAll('.' + barRectClassName).style('opacity', .35);
+
+            const barsToHighlight = d3.selectAll(`.${barRectClassName}[data-index='${index}']`);
+            barsToHighlight.style('opacity', .8);
+
+        } else {
+            d3.selectAll('.' + barRectClassName).style('opacity', .8);
+        }
+
+    }
+
     onHoverHandler(index?:number){
         const { onHover } = this.props;
         const { chartData, years } = this.state;
@@ -278,6 +296,8 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         }, ()=>{
             onHover(year);
         });
+
+        this.toggleHoverEffect(index);
     }
 
     getInfoDiv(){
