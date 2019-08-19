@@ -75,6 +75,13 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
                     />
                 </div>
 
+                <div className='padding-left-half padding-right-half text-right'>
+                    <a className='js-modal-toggle font-size--3 link-light-gray' href='javascript:void(0);' data-modal="about">
+                        <span className='icon-ui-description'></span>
+                        about this app
+                    </a>
+                </div>
+
             </div>
         );
     }

@@ -1,5 +1,6 @@
 
 import * as React from 'react';
+import { modal as initCalciteModal } from 'calcite-web/dist/js/calcite-web.min.js';
 
 import Map from '../Map';
 import InfoPanel from '../InfoPanel';
@@ -117,6 +118,7 @@ export default class App extends React.PureComponent<IProps, IState> {
 
     componentDidMount(){
         this.loadAppData();
+        initCalciteModal();
     }
 
     render(){
