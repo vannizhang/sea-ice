@@ -137,8 +137,8 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
     }
 
     getLabelForActiveDate(){
-        const { recordDates } = this.props;
-        const activeDate = recordDates.length ? recordDates[this.state.value] : null;
+        const { activeRecordDate } = this.props;
+        const activeDate = activeRecordDate //recordDates.length ? recordDates[this.state.value] : null;
         const monthIdx = activeDate ? activeDate.month - 1 : undefined;
         const monthName = dateFns.getMonthName(monthIdx, true);
         return activeDate ? `${monthName} ${activeDate.year}` : '';
@@ -171,8 +171,8 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
         const areaDiff = areaForActiveRecordDate.area - areaForActiveRecordDate.median;
         const areaDiffInPct = (( Math.abs(areaDiff) /areaForActiveRecordDate.median ) * 100).toFixed(1);
         const areaDiffDesc = areaDiff > 0 
-        ? <span>{areaDiffInPct}% above median</span>
-        : <span>{areaDiffInPct}% below median</span>;
+        ? <span>{areaDiffInPct}% <span className='is-above'>above</span> median</span>
+        : <span>{areaDiffInPct}% <span className='is-below'>below</span> median</span>;
 
         return (
             <div className='info-window'>
@@ -184,8 +184,14 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
     }
 
     componentDidUpdate(prevProps:IProps){
-        if(this.props.recordDates !== prevProps.recordDates){
-            this.updateValue(this.props.recordDates.length - 1);
+        // if(this.props.recordDates !== prevProps.recordDates){
+        //     this.updateValue(this.props.recordDates.length - 1);
+        // }
+
+        if(this.props.activeRecordDate !== prevProps.activeRecordDate){
+            const index = this.props.recordDates.indexOf(this.props.activeRecordDate);
+            // console.log(index);
+            this.updateValue(index);
         }
 
         if(this.props.seaIceExtByMonthData !== prevProps.seaIceExtByMonthData){

@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as d3 from 'd3';
 
 import { IMinMaxSeaExtByYearData, PolarRegion } from '../../types';
-import config from './config';
+// import config from './config';
 
 interface IDataOnHover {
     year:number,
@@ -15,7 +15,8 @@ interface IDataOnHover {
 interface IProps {
     data: IMinMaxSeaExtByYearData
     polarRegion:PolarRegion,
-    onHover:(year?:number)=>void
+    onHover:(year?:number)=>void,
+    onClick:(year:number, value:number)=>void
 };
 
 interface IState {
@@ -257,7 +258,11 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             .on('mouseout', (d:any, i:number)=>{
                 // onHover(undefined);
                 // this.onHoverHandler()
-            });
+            })
+            .on('click', (d:number, i:number)=>{
+                // console.log(d, i);
+                this.onClickHandler(d, i);
+            })
     }
 
     toggleHoverEffect(index?:number){
@@ -274,6 +279,14 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             d3.selectAll('.' + barRectClassName).style('opacity', .8);
         }
 
+    }
+
+    onClickHandler(value:number, index:number){
+        const { onClick } = this.props;
+        const { years } = this.state;
+        const year = years[index];
+
+        onClick(year, value);
     }
 
     onHoverHandler(index?:number){

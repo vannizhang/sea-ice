@@ -48,6 +48,7 @@ export default class App extends React.PureComponent<IProps, IState> {
 
         this.updatePolarRegion = this.updatePolarRegion.bind(this);
         this.timeControlOnValueChange = this.timeControlOnValueChange.bind(this);
+        this.seaIceValOnSelect = this.seaIceValOnSelect.bind(this);
     }
 
     updatePolarRegion(polarRegion:PolarRegion){
@@ -110,10 +111,32 @@ export default class App extends React.PureComponent<IProps, IState> {
         // console.log(seaIceExtByMonth);
 
         this.setRecordDates(recordDates);
+        // console.log(recordDates);
     }
 
     timeControlOnValueChange(index:number){
         this.updateActiveRecordDate(index);
+    }
+
+    seaIceValOnSelect(year:number, value:number){
+        // console.log(year, value);
+        const { seaIceExtByMonthData, recordDates, polarRegion } = this.state;
+
+        // values for the selected year
+        const values = seaIceExtByMonthData[polarRegion].filter(d=>{
+            return d.year === year;
+        })[0].values;
+
+        const monthNum = values.indexOf(value) + 1;
+
+        for(let i = 0, len = recordDates.length; i < len; i++){
+            const d = recordDates[i];
+
+            if(d.year === year && d.month === monthNum){
+                this.updateActiveRecordDate(i);
+                break;
+            }
+        }
     }
 
     componentDidMount(){
@@ -135,6 +158,7 @@ export default class App extends React.PureComponent<IProps, IState> {
                     seaIceExtByYearData={this.state.seaIceExtByYearData}
                     seaIceExtByMonthData={this.state.seaIceExtByMonthData}
                     medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
+                    seaIceValOnSelect={this.seaIceValOnSelect}
                 />
                 <TimeControl 
                     polarRegion={this.state.polarRegion}

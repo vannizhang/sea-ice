@@ -64,12 +64,22 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     setChartData(){
-        
-        // can only draw line for year with full 12 month of data
+
         const data = this.props.data[this.props.polarRegion]
-                .filter(d=>d.values.length === 12);
+            .filter((d, i)=>{
+                // only include data for years with full 12 month of data
+                // except the for the last item, which is the current year
+                return (
+                    d.values.length === 12 || 
+                    i === (this.props.data[this.props.polarRegion].length - 1) 
+                );
+            });
+            // .filter(d=>d.values.length === 12);
         
-        const chartData = data.map(d=>d.values);
+        const chartData = data.map(d=>{
+            const values = d.values.filter(n=>n);
+            return values;
+        });
 
         const medianData = this.props.medianData[this.props.polarRegion];
 
@@ -132,7 +142,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         const maxVals = chartData.map(d=>d3.max(d));
         const maxVal = Math.ceil(d3.max(maxVals));
 
-        // console.log(minVal, maxVal);
+        // console.log(chartData, minVal, maxVal);
 
         yScale.domain([minVal, maxVal]);
     }
@@ -215,9 +225,9 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
 
                     const modifierClass = [this.trendLineClassName];
 
-                    // if(idx === chartData.length - 1){
-                    //     modifierClass.push('is-active');
-                    // }
+                    if(idx === chartData.length - 1){
+                        modifierClass.push('is-current-year');
+                    }
 
                     return modifierClass.join(' ');
                 })

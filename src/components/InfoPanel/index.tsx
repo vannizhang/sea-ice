@@ -16,6 +16,7 @@ interface IProps {
     seaIceExtByYearData:IMinMaxSeaExtByYearData,
     seaIceExtByMonthData:ISeaIceExtByMonthData,
     medianSeaIceExtByMonthData:IMedianSeaIceExtByMonth
+    seaIceValOnSelect:(year:number, value:number)=>void
 };
 
 interface IState {
@@ -63,6 +64,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
                         polarRegion={this.props.polarRegion}
                         data={this.props.seaIceExtByYearData}
                         onHover={this.seaIceExtByYearChartOnHover}
+                        onClick={this.props.seaIceValOnSelect}
                     />
                 </div>
 

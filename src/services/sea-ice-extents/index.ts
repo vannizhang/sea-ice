@@ -148,20 +148,25 @@ const prepareSeaIceExtByMonth = (features:Array<IFeaturesSeaIceExtByMonth>):Arra
 
     features.forEach((feature:IFeaturesSeaIceExtByMonth)=>{
 
-        if(!dataByYear[feature.year]){
-            dataByYear[feature.year] = [feature.value];
+        const year = feature.year;
+        const value = feature.value;
+
+        if(!dataByYear[year]){
+            dataByYear[year] = [value];
         } else {
-            dataByYear[feature.year].push(feature.value);
+            dataByYear[year].push(value);
         }
     });
 
     const outputData = Object.keys(dataByYear).map(key=>{
         const year = +key;
 
+        const values = dataByYear[year];
+
         return {
             year,
-            values: dataByYear[year]
-        }
+            values
+        };
     });
 
     return outputData;

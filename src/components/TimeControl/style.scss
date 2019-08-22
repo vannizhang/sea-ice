@@ -3,6 +3,8 @@ $height: 100px;
 $textColor: rgba(255,255,255,.9);
 $textColorLighter: rgba(255,255,255,.7);
 $iconColor: rgba(255,255,255,.5);
+$isAboveColor: #59fffc;
+$isBelowColor: #ff824d;
 
 #time-control-container{
     position: absolute;
@@ -113,5 +115,13 @@ $iconColor: rgba(255,255,255,.5);
 
     .lighter-text {
         color: $textColorLighter
+    }
+
+    .is-above {
+        color: $isAboveColor;
+    }
+
+    .is-below {
+        color: $isBelowColor;
     }
 }
