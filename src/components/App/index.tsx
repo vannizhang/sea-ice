@@ -1,10 +1,10 @@
 
 import * as React from 'react';
-import { modal as initCalciteModal } from 'calcite-web/dist/js/calcite-web.min.js';
 
 import Map from '../Map';
 import InfoPanel from '../InfoPanel';
 import TimeControl from '../TimeControl';
+import AboutThisApp from '../AboutThisApp';
 
 import { 
     PolarRegion, 
@@ -141,7 +141,6 @@ export default class App extends React.PureComponent<IProps, IState> {
 
     componentDidMount(){
         this.loadAppData();
-        initCalciteModal();
     }
 
     render(){
@@ -168,6 +167,7 @@ export default class App extends React.PureComponent<IProps, IState> {
                     medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
                     onValueChange={this.timeControlOnValueChange}
                 />
+                <AboutThisApp />
             </div>
         )
     }

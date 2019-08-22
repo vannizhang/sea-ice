@@ -262,7 +262,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             .on('click', (d:number, i:number)=>{
                 // console.log(d, i);
                 this.onClickHandler(d, i);
-            })
+            });
     }
 
     toggleHoverEffect(index?:number){
