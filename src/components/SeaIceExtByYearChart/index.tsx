@@ -207,9 +207,9 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             svg.append("rect")
             .attr('class', backgroundRectClassName)
             .attr("width", width + 30)
-            .attr("height", height + 20)
+            .attr("height", height + 30)
             .attr("transform", (d:any, i:number)=>{ 
-                return "translate(" + -20 + ",0)"; 
+                return "translate(-20, -10)"; 
             })
             .style('opacity', 0)
             .on('mouseout', ()=>{
