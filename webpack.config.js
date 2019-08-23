@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssets = require('optimize-css-assets-webpack-plugin');
 
 module.exports =  (env, options)=> {
 
@@ -76,7 +78,13 @@ module.exports =  (env, options)=> {
                     useShortDoctype                : true
                 }
             })
-        ]
+        ],
+        optimization: {
+            minimizer: [
+                // new TerserPlugin({}), 
+                new OptimizeCSSAssets({})
+            ],
+        },
     }
 
 };
