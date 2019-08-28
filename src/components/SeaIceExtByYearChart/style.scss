@@ -1,10 +1,14 @@
 $maxValColor: rgba(89,255,252,.45);
 $minValColor: rgba(89,255,252,.65);
+$maxValColor4Text: rgba(89,255,252,.65);
+$minValColor4Text: rgba(89,255,252,.85);
 
 .sea-ice-ext-by-year-chart-wrap{
     // width: 100%;
     // height: 250px;
     // background: rgba(0,0,0,.1);
+
+    position: relative;
 
     .info-window {
         padding: 0 1rem;
@@ -14,14 +18,6 @@ $minValColor: rgba(89,255,252,.65);
         div {
             flex-grow: 1;
             flex-shrink: 0;
-        }
-
-        .min-value {
-            color: $minValColor;
-        }
-        
-        .max-value {
-            color: $maxValColor;
         }
     }
 
@@ -37,6 +33,14 @@ $minValColor: rgba(89,255,252,.65);
         fill: $maxValColor;
     }
 
+    .min-value {
+        color: $minValColor4Text;
+    }
+    
+    .max-value {
+        color: $maxValColor4Text;
+    }
+
     .axis {
         text {
             fill: rgba(255,255,255,.5);
@@ -50,5 +54,11 @@ $minValColor: rgba(89,255,252,.65);
             stroke: rgba(255,255,255,.4);
         }
         
+    }
+
+    .tooltip-content{
+        padding: .5rem;
+        background: rgba(0,0,0,.6);
+        color: rgba(255,255,255,.75);
     }
 }

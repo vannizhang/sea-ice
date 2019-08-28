@@ -11,14 +11,17 @@ import {
     IMinMaxSeaExtByYearData, 
     ISeaIceExtByMonthData, 
     IMedianSeaIceExtByMonth, 
-    IRecordDate 
+    IRecordDate,
+    ISeaIceExtVal2MonthLookup
 } from '../../types';
 
 import { 
     queryMinMaxSeaIceExtByYear, 
     querySeaIceExtByMonth, 
     queryMedianSeaIceExtByMonth, 
-    queryRecordDates 
+    queryRecordDates,
+    prepareSeaIceExtByMonth,
+    generateValue2MonthLookup
 } from '../../services/sea-ice-extents';
 
 interface IProps {};
@@ -30,6 +33,7 @@ interface IState {
     seaIceExtByYearData:IMinMaxSeaExtByYearData,
     seaIceExtByMonthData:ISeaIceExtByMonthData,
     medianSeaIceExtByMonthData:IMedianSeaIceExtByMonth
+    seaIceExtVal2MonthLookup: ISeaIceExtVal2MonthLookup
 };
 
 export default class App extends React.PureComponent<IProps, IState> {
@@ -43,7 +47,8 @@ export default class App extends React.PureComponent<IProps, IState> {
             activeRecordDate: null,
             seaIceExtByYearData: null,
             seaIceExtByMonthData: null,
-            medianSeaIceExtByMonthData: null
+            medianSeaIceExtByMonthData: null,
+            seaIceExtVal2MonthLookup:null
         }
 
         this.updatePolarRegion = this.updatePolarRegion.bind(this);
@@ -95,23 +100,39 @@ export default class App extends React.PureComponent<IProps, IState> {
         })
     }
 
+    setSeaIceVal2MonthLookup(lookup:ISeaIceExtVal2MonthLookup){
+        this.setState({
+            seaIceExtVal2MonthLookup: lookup
+        });
+    }
+
     async loadAppData(){
         const seaIceExtByYear = await queryMinMaxSeaIceExtByYear();
 
-        const seaIceExtByMonth = await querySeaIceExtByMonth();
+        const seaIceExtByMonthFeatures = await querySeaIceExtByMonth();
+
+        const seaIceExtByMonth:ISeaIceExtByMonthData = {
+            antarctic: prepareSeaIceExtByMonth(seaIceExtByMonthFeatures.antarctic),
+            arctic: prepareSeaIceExtByMonth(seaIceExtByMonthFeatures.arctic)
+        };
 
         const medianSeaIceExtByMonth = await queryMedianSeaIceExtByMonth();
 
         const recordDates = await queryRecordDates();
 
+        const seaIceVal2MonthLookup = generateValue2MonthLookup(seaIceExtByMonthFeatures);
+        
         this.setSeaIceExtByYearData(seaIceExtByYear);
         // console.log(seaIceExtByYear);
 
         this.setSeaIceExtByMonthData(seaIceExtByMonth, medianSeaIceExtByMonth);
-        // console.log(seaIceExtByMonth);
+        // console.log(seaIceExtByMonthFeatures);
 
         this.setRecordDates(recordDates);
         // console.log(recordDates);
+
+        this.setSeaIceVal2MonthLookup(seaIceVal2MonthLookup);
+        console.log(seaIceVal2MonthLookup);
     }
 
     timeControlOnValueChange(index:number){
@@ -157,6 +178,7 @@ export default class App extends React.PureComponent<IProps, IState> {
                     seaIceExtByYearData={this.state.seaIceExtByYearData}
                     seaIceExtByMonthData={this.state.seaIceExtByMonthData}
                     medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
+                    seaIceExtVal2MonthLookup={this.state.seaIceExtVal2MonthLookup}
                     seaIceValOnSelect={this.seaIceValOnSelect}
                 />
                 <TimeControl 

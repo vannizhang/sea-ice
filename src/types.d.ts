@@ -17,6 +17,11 @@ interface IFeaturesSeaIceExtByMonth {
     value:number
 }
 
+interface ISeaIceExtByMonthQueryResponse {
+    'arctic': Array<IFeaturesSeaIceExtByMonth>,
+    'antarctic': Array<IFeaturesSeaIceExtByMonth>
+}
+
 interface ISeaIceExtByMonthDataItem {
     year: number,
     values: number[]
@@ -38,6 +43,17 @@ interface IRecordDate {
     date: number
 }
 
+interface ISeaIceExtVal2MonthLookupItem {
+    [key:string]: {
+        [value:string]:number
+    }
+}
+
+interface ISeaIceExtVal2MonthLookup {
+    'arctic': ISeaIceExtVal2MonthLookupItem,
+    'antarctic': ISeaIceExtVal2MonthLookupItem
+}
+
 export {
     PolarRegion,
     IMinMaxSeaExtByYearData,
@@ -46,5 +62,8 @@ export {
     ISeaIceExtByMonthData,
     ISeaIceExtByMonthDataItem,
     IMedianSeaIceExtByMonth,
-    IRecordDate
+    IRecordDate,
+    ISeaIceExtByMonthQueryResponse,
+    ISeaIceExtVal2MonthLookupItem,
+    ISeaIceExtVal2MonthLookup
 };

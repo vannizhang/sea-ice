@@ -7,7 +7,7 @@ import SeaIceExtByYearChart from '../SeaIceExtByYearChart';
 import MonthlyTrendChart from '../MonthlyTrendChart';
 
 // import { queryMinMaxSeaIceExtByYear, querySeaIceExtByMonth, queryMedianSeaIceExtByMonth } from '../../services/sea-ice-extents'
-import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData, IMedianSeaIceExtByMonth, IRecordDate } from '../../types';
+import { PolarRegion, IMinMaxSeaExtByYearData, ISeaIceExtByMonthData, IMedianSeaIceExtByMonth, ISeaIceExtVal2MonthLookup, IRecordDate } from '../../types';
 
 interface IProps {
     polarRegion:PolarRegion, 
@@ -16,6 +16,7 @@ interface IProps {
     seaIceExtByYearData:IMinMaxSeaExtByYearData,
     seaIceExtByMonthData:ISeaIceExtByMonthData,
     medianSeaIceExtByMonthData:IMedianSeaIceExtByMonth
+    seaIceExtVal2MonthLookup: ISeaIceExtVal2MonthLookup,
     seaIceValOnSelect:(year:number, value:number)=>void
 };
 
@@ -63,6 +64,7 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
                     <SeaIceExtByYearChart 
                         polarRegion={this.props.polarRegion}
                         data={this.props.seaIceExtByYearData}
+                        seaIceExtVal2MonthLookup={this.props.seaIceExtVal2MonthLookup}
                         onHover={this.seaIceExtByYearChartOnHover}
                         onClick={this.props.seaIceValOnSelect}
                     />

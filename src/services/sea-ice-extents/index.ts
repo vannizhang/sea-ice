@@ -14,7 +14,10 @@ import {
     ISeaIceExtByMonthData,
     ISeaIceExtByMonthDataItem,
     IMedianSeaIceExtByMonth,
-    IRecordDate
+    IRecordDate,
+    ISeaIceExtByMonthQueryResponse,
+    ISeaIceExtVal2MonthLookup,
+    ISeaIceExtVal2MonthLookupItem
 } from '../../types';
 
 const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
@@ -101,7 +104,7 @@ const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
     };
 };
 
-const querySeaIceExtByMonth = async():Promise<ISeaIceExtByMonthData>=>{
+const querySeaIceExtByMonth = async():Promise<ISeaIceExtByMonthQueryResponse>=>{
 
     const queryResForAntarctic = await queryFeatures({
         url: antarcticConfig.url,
@@ -135,9 +138,14 @@ const querySeaIceExtByMonth = async():Promise<ISeaIceExtByMonthData>=>{
 
     // console.log(featuresForAntarctic, featuresForArctic)
 
+    // return {
+    //     antarctic: prepareSeaIceExtByMonth(featuresForAntarctic),
+    //     arctic: prepareSeaIceExtByMonth(featuresForArctic)
+    // };
+
     return {
-        antarctic: prepareSeaIceExtByMonth(featuresForAntarctic),
-        arctic: prepareSeaIceExtByMonth(featuresForArctic)
+        antarctic: featuresForAntarctic,
+        arctic: featuresForArctic
     };
 
 };
@@ -229,9 +237,48 @@ const queryRecordDates = async()=>{
     return recordDates;
 };
 
+const generateValue2MonthLookup = (data:ISeaIceExtByMonthQueryResponse):ISeaIceExtVal2MonthLookup=>{
+    const antarcticData = data.antarctic;
+    const arcticData = data.arctic;
+
+    const antarcticLookupTable:ISeaIceExtVal2MonthLookupItem = {};
+    const arcticLookupTable:ISeaIceExtVal2MonthLookupItem = {};
+
+    antarcticData.forEach((d:IFeaturesSeaIceExtByMonth)=>{
+        const { year, month, value } = d;
+
+        const yearInStr = year.toString();
+        const valueInStr = value.toString();
+
+        if(!antarcticLookupTable[yearInStr]){
+            antarcticLookupTable[yearInStr] = {}
+        }
+
+        antarcticLookupTable[yearInStr][valueInStr] = month;
+
+    });
+
+    arcticData.forEach((d:IFeaturesSeaIceExtByMonth)=>{
+        const { year, month, value } = d;
+
+        if(!arcticLookupTable[year]){
+            arcticLookupTable[year] = {}
+        }
+
+        arcticLookupTable[year][value] = month;
+    });
+
+    return {
+        antarctic: antarcticLookupTable,
+        arctic: arcticLookupTable
+    }
+}
+
 export {
     queryMinMaxSeaIceExtByYear,
     querySeaIceExtByMonth,
     queryMedianSeaIceExtByMonth,
-    queryRecordDates
+    queryRecordDates,
+    prepareSeaIceExtByMonth,
+    generateValue2MonthLookup
 }
