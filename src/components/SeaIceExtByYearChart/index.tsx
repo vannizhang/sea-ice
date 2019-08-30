@@ -385,22 +385,20 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             }
         }
 
-        
         const yearIndexOnHover = years.indexOf(dataOnHover.year);
         const valOnHover = dataOnHover.value;
 
-        // console.log(yearIndexOnHover, dataOnHover.year)
-
         const xPos = xScale0(yearIndexOnHover);
         const yPos = yScale(valOnHover);
+        const topPos = dataOnHover.min === dataOnHover.value ? yPos - 25 : yPos;
 
-        const left = yearIndexOnHover <= (years.length / 2)
+        const leftPos = yearIndexOnHover <= (years.length / 2)
             ? xPos + margin.left + 12
             : xPos - 120;
 
         return {
-            top: yPos,
-            left: left
+            top: topPos,
+            left: leftPos
         }
     }
 

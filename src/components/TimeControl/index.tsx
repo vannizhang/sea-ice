@@ -10,6 +10,8 @@ import {
     IMedianSeaIceExtByMonth
 } from '../../types';
 
+import SliderTicks from './SliderTicks';
+
 interface IProps {
     polarRegion:PolarRegion,
     recordDates: Array<IRecordDate>
@@ -201,9 +203,10 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
 
     render(){
 
+        const  { recordDates } = this.props;
         const  { isPlaying } = this.state;
 
-        const maxVal = this.props.recordDates.length - 1;
+        const maxVal = recordDates.length - 1;
 
         const infoWindow = this.getSeaIceExtInfo();
 
@@ -222,19 +225,17 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
 
                     {infoWindow}
 
-                    <div className='time-slider'>
-                        <div className='margin-left-1 margin-right-1'>
+                    <div className='time-slider padding-left-1 padding-right-1'>
+                        <form className="calcite-slider">
+                            <label>
+                                <input type="range" min="0" max={maxVal} value={this.state.value} step="1" onChange={this.onChangeHandler}></input>
+                            </label>
+                        </form>
 
-                            <form className="calcite-slider">
-                                <label>
-                                    <input type="range" min="0" max={maxVal} value={this.state.value} step="1" onChange={this.onChangeHandler}></input>
-                                </label>
-                            </form>
-
-                            <div className='slider-ticks-wrap'>
-                                
-                            </div>
-
+                        <div style={{ width: '100%', height: '20px' }}>
+                            <SliderTicks 
+                                recordDates={recordDates}
+                            />
                         </div>
                     </div>
 

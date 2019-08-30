@@ -1,0 +1,31 @@
+.slider-ticks-wrap{
+    width: 100%;
+    // height: 20px;
+
+    .slider-ticks-group {
+        display: flex;
+        width: 100%;
+
+        .tick {
+            height: 3px;
+            width: 1px;
+            background: rgba(255,255,255,.3);
+        }
+    }
+
+    .slider-labels-group{
+        // display: flex;
+        position: relative;
+        width: 100%;
+        // height: 10px;
+        // background: rgba(255,255,255,.1);
+        font-size: .65rem;
+        color:rgba(255,255,255,.8);
+        margin-top: .3rem;
+
+        .tick-label{
+            position: absolute;
+            top: 0;
+        }
+    }
+}

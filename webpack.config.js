@@ -1,14 +1,20 @@
 const path = require('path');
+const os = require('os');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssets = require('optimize-css-assets-webpack-plugin');
+
+const computerName = os.hostname();
 
 module.exports =  (env, options)=> {
 
     const devMode = options.mode === 'development' ? true : false;
 
     return {
+        devServer: {
+            host: `${computerName}.arcgis.com`
+        },
         entry: {
             main: ['./src/index.tsx']
         },
