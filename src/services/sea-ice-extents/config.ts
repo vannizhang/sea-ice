@@ -21,7 +21,6 @@ const arctic = {
 };
 
 const antarcticMedianSeaIceExt = {
-    // url: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/Median_Sea_Ice_Extent_for_the_Antarctic/FeatureServer/0',
     url: 'https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Median_Sea_Ice_Extent_for_the_Antarctic/FeatureServer/0',
     fields: {
         date: 'Rec_Date',
@@ -33,7 +32,6 @@ const antarcticMedianSeaIceExt = {
 }
 
 const arcticMedianSeaIceExt = {
-    // url: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/Median_Sea_Ice_Extent_for_the_Arctic/FeatureServer/0',
     url : 'https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Median_Sea_Ice_Extent_for_the_Arctic/FeatureServer/0',
     fields: {
         date: 'Rec_Date',
