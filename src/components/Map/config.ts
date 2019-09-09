@@ -1,3 +1,10 @@
+import {
+    antarctic,
+    arctic,
+    antarcticMedianSeaIceExt,
+    arcticMedianSeaIceExt
+} from '../../services/sea-ice-extents/config';
+
 const MapConfig = {
     container_id: "mapViewDiv",
     web_map_id: {
@@ -6,8 +13,8 @@ const MapConfig = {
     },
     sea_ice_ext_feature_service: {
         url: {
-            antarctic: 'https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/seaice_extent_S_v1/FeatureServer/0',
-            arctic: 'https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/seaice_extent_N_v1/FeatureServer/0'
+            antarctic: antarctic.url,
+            arctic: arctic.url
         },
         fields: {
             date: 'Rec_Date',
@@ -21,8 +28,8 @@ const MapConfig = {
     },
     median_sea_ice_ext_feature_service: {
         url: {
-            antarctic: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/Median_Sea_Ice_Extent_for_the_Antarctic/FeatureServer/0',
-            arctic: 'https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/Median_Sea_Ice_Extent_for_the_Arctic/FeatureServer/0'
+            antarctic: antarcticMedianSeaIceExt.url,
+            arctic: arcticMedianSeaIceExt.url
         },
         fields: {
             date: 'Rec_Date',
