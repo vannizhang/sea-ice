@@ -272,7 +272,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
 
         const { yearOnHover } = this.props;
 
-        const titleStr = 'Monthly Trend';
+        const titleStr = 'Monthly Change';
 
         const title = yearOnHover 
             ? <div className='sea-ice-ext-color is-bright'><span>{yearOnHover} {titleStr}</span></div>

@@ -27,7 +27,7 @@ const antarcticMedianSeaIceExt = {
         year: 'Rec_Year',
         month: 'Rec_Month',
         area: 'Area',
-        extent: 'Rec_Extent'
+        extent: 'Extent'
     }
 }
 
@@ -38,7 +38,7 @@ const arcticMedianSeaIceExt = {
         year: 'Rec_Year',
         month: 'Rec_Month',
         area: 'Area',
-        extent: 'Rec_Extent'
+        extent: 'Extent'
     }
 }
 

@@ -28,13 +28,13 @@ const queryMinMaxSeaIceExtByYear = async():Promise<IMinMaxSeaExtByYearData>=>{
 
     const outStatisticsMinExt:IStatisticDefinition = {
         statisticType: 'min',
-        onStatisticField: antarcticConfig.fields.area,
+        onStatisticField: antarcticConfig.fields.extent,
         outStatisticFieldName: outStatisticFieldNameMinExt
     };
 
     const outStatisticsMaxExt:IStatisticDefinition = {
         statisticType: 'max',
-        onStatisticField: antarcticConfig.fields.area,
+        onStatisticField: antarcticConfig.fields.extent,
         outStatisticFieldName: outStatisticFieldNameMaxExt
     };
 
@@ -109,14 +109,14 @@ const querySeaIceExtByMonth = async():Promise<ISeaIceExtByMonthQueryResponse>=>{
     const queryResForAntarctic = await queryFeatures({
         url: antarcticConfig.url,
         where: "1=1",
-        outFields: [antarcticConfig.fields.year, antarcticConfig.fields.month, antarcticConfig.fields.area],
+        outFields: [antarcticConfig.fields.year, antarcticConfig.fields.month, antarcticConfig.fields.extent],
         returnGeometry: false
     }) as IQueryFeaturesResponse;
 
     const queryResForArctic = await queryFeatures({
         url: arcticConfig.url,
         where: "1=1",
-        outFields: [arcticConfig.fields.year, arcticConfig.fields.month, arcticConfig.fields.area],
+        outFields: [arcticConfig.fields.year, arcticConfig.fields.month, arcticConfig.fields.extent],
         returnGeometry: false
     }) as IQueryFeaturesResponse;
 
@@ -124,7 +124,7 @@ const querySeaIceExtByMonth = async():Promise<ISeaIceExtByMonthQueryResponse>=>{
         return {
             year: d.attributes[antarcticConfig.fields.year],
             month: d.attributes[antarcticConfig.fields.month],
-            value: d.attributes[antarcticConfig.fields.area]
+            value: d.attributes[antarcticConfig.fields.extent]
         }
     });
 
@@ -132,7 +132,7 @@ const querySeaIceExtByMonth = async():Promise<ISeaIceExtByMonthQueryResponse>=>{
         return {
             year: d.attributes[arcticConfig.fields.year],
             month: d.attributes[arcticConfig.fields.month],
-            value: d.attributes[arcticConfig.fields.area]
+            value: d.attributes[arcticConfig.fields.extent]
         }
     });
 
@@ -187,7 +187,7 @@ const queryMedianSeaIceExtByMonth = async():Promise<IMedianSeaIceExtByMonth>=>{
         url: antarcticMedianSeaIceExtConfig.url,
         // the monthly median extent data are the same for each year, so only need to query one year of data
         where: `${antarcticMedianSeaIceExtConfig.fields.year} = 1980`,
-        outFields: [antarcticMedianSeaIceExtConfig.fields.month, antarcticMedianSeaIceExtConfig.fields.area],
+        outFields: [antarcticMedianSeaIceExtConfig.fields.month, antarcticMedianSeaIceExtConfig.fields.extent],
         returnGeometry: false,
         orderByFields: antarcticMedianSeaIceExtConfig.fields.month
     }) as IQueryFeaturesResponse;
@@ -195,17 +195,17 @@ const queryMedianSeaIceExtByMonth = async():Promise<IMedianSeaIceExtByMonth>=>{
     const queryResForArctic = await queryFeatures({
         url: arcticMedianSeaIceExtConfig.url,
         where: `${arcticConfig.fields.year} = 1980`,
-        outFields: [arcticMedianSeaIceExtConfig.fields.month, arcticMedianSeaIceExtConfig.fields.area],
+        outFields: [arcticMedianSeaIceExtConfig.fields.month, arcticMedianSeaIceExtConfig.fields.extent],
         returnGeometry: false,
         orderByFields: arcticMedianSeaIceExtConfig.fields.month
     }) as IQueryFeaturesResponse;
 
     const featuresForAntarctic:Array<number> = queryResForAntarctic.features.map((d:IFeature)=>{
-        return d.attributes[antarcticMedianSeaIceExtConfig.fields.area]
+        return d.attributes[antarcticMedianSeaIceExtConfig.fields.extent]
     });
 
     const featuresForArctic:Array<number> = queryResForArctic.features.map((d:IFeature)=>{
-        return d.attributes[arcticMedianSeaIceExtConfig.fields.area]
+        return d.attributes[arcticMedianSeaIceExtConfig.fields.extent]
     });
 
     return {
