@@ -403,6 +403,10 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     componentDidUpdate(prevProps:IProps, prevState:IState){
+
+        if(!this.state.svg){
+            this.initSvg();
+        }
         
         if( this.props.data !== prevProps.data || 
             this.props.polarRegion !== prevProps.polarRegion
@@ -412,10 +416,6 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             }
         }
 
-    }
-
-    componentDidMount(){
-        this.initSvg();
     }
 
     render(){
@@ -435,8 +435,8 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
                     {tooltipContent}
                 </div>
 
-                <div ref={this.containerRef} style={{
-                    width: '400px',
+                <div id='foobar' ref={this.containerRef} style={{
+                    width: '100%',
                     height: '250px'
                 }}></div>
             </div>

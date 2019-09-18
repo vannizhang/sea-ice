@@ -291,6 +291,10 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
 
     componentDidUpdate(prevProps:IProps, prevState:IState){
 
+        if(!this.state.svg){
+            this.initSvg();
+        }
+
         if(this.props.data){
             
             if( this.props.data !== prevProps.data || 
@@ -308,7 +312,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     componentDidMount(){
-        this.initSvg();
+        // this.initSvg();
     }
 
     render(){
@@ -318,7 +322,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             <div className='sea-ice-monthly-trend-chart-wrap'>
                 { InfoDiv }
                 <div ref={this.containerRef} style={{
-                    width: '400px',
+                    width: '100%',
                     height: '250px'
                 }}></div>
             </div>

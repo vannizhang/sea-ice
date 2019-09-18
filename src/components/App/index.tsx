@@ -133,7 +133,7 @@ export default class App extends React.PureComponent<IProps, IState> {
         // console.log(recordDates);
 
         this.setSeaIceVal2MonthLookup(seaIceVal2MonthLookup);
-        console.log(seaIceVal2MonthLookup);
+        // console.log(seaIceVal2MonthLookup);
     }
 
     timeControlOnValueChange(index:number){
