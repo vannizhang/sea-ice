@@ -1,0 +1,10 @@
+@import '../../style/fancy-scrollbar.scss';
+
+.side-panel{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    bottom: 2rem;
+    width: 500px;
+    overflow-y: auto;
+}

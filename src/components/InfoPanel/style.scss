@@ -1,17 +1,16 @@
 @import '../../style/color.scss';
-@import '../../style/fancy-scrollbar.scss';
 
 #infoPanelDiv {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+    // position: absolute;
+    // top: 1rem;
+    // right: 1rem;
     padding: 1rem 1.5rem;
     box-sizing: border-box;
     // width: 400px;
-    min-height: 200px;
+    // min-height: 200px;
     background-color: $themeColorAlpha95;
     box-shadow: 0 0 2px 2px rgba(0,0,0,0.1);    
     // margin-bottom: 150px;
-    max-height: calc(100% - 2.5rem);
-    overflow-y: auto;
+    // max-height: calc(100% - 2.5rem);
+    // overflow-y: auto;
 }

@@ -1,10 +1,11 @@
-
+import './style.scss';
 import * as React from 'react';
 
 import Map from '../Map';
 import InfoPanel from '../InfoPanel';
 import TimeControl from '../TimeControl';
 import AboutThisApp from '../AboutThisApp';
+import SideBarHeader from '../Header';
 
 import { 
     PolarRegion, 
@@ -165,30 +166,44 @@ export default class App extends React.PureComponent<IProps, IState> {
     }
 
     render(){
+
+        const infoPanel = <InfoPanel 
+            polarRegion={this.state.polarRegion}
+            polarRegionOnChange={this.updatePolarRegion}
+            activeRecordDate={this.state.activeRecordDate}
+            seaIceExtByYearData={this.state.seaIceExtByYearData}
+            seaIceExtByMonthData={this.state.seaIceExtByMonthData}
+            medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
+            seaIceExtVal2MonthLookup={this.state.seaIceExtVal2MonthLookup}
+            seaIceValOnSelect={this.seaIceValOnSelect}
+        />;
+
+        const timeControl = <TimeControl 
+            polarRegion={this.state.polarRegion}
+            recordDates={this.state.recordDates}
+            activeRecordDate={this.state.activeRecordDate}
+            seaIceExtByMonthData={this.state.seaIceExtByMonthData}
+            medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
+            onValueChange={this.timeControlOnValueChange}
+        />;
+
+        const desktopSidePanel = (
+            <div className = 'side-panel fancy-scrollbar'>
+                <SideBarHeader />
+                {timeControl}
+                {infoPanel}
+            </div>
+        )
+
         return (
             <div id='appContentDiv'>
                 <Map 
                     polarRegion={this.state.polarRegion}
                     activeRecordDate={this.state.activeRecordDate}
                 />
-                <InfoPanel 
-                    polarRegion={this.state.polarRegion}
-                    polarRegionOnChange={this.updatePolarRegion}
-                    activeRecordDate={this.state.activeRecordDate}
-                    seaIceExtByYearData={this.state.seaIceExtByYearData}
-                    seaIceExtByMonthData={this.state.seaIceExtByMonthData}
-                    medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
-                    seaIceExtVal2MonthLookup={this.state.seaIceExtVal2MonthLookup}
-                    seaIceValOnSelect={this.seaIceValOnSelect}
-                />
-                <TimeControl 
-                    polarRegion={this.state.polarRegion}
-                    recordDates={this.state.recordDates}
-                    activeRecordDate={this.state.activeRecordDate}
-                    seaIceExtByMonthData={this.state.seaIceExtByMonthData}
-                    medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
-                    onValueChange={this.timeControlOnValueChange}
-                />
+
+                {desktopSidePanel}
+
                 <AboutThisApp />
             </div>
         )

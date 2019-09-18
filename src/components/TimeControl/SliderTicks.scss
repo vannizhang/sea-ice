@@ -3,8 +3,9 @@
     // height: 20px;
 
     .slider-ticks-group {
+        position: relative;
         display: flex;
-        width: 100%;
+        // width: 100%;
 
         .tick {
             height: 3px;

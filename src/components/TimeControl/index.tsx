@@ -164,7 +164,11 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
         const { recordDates } = this.props;
 
         if(!recordDates.length){
-            return null;
+            return (
+                <div className='info-window'>
+                    Loading...
+                </div>
+            );
         }
 
         const activeRecordDateLabel = this.getLabelForActiveDate();
@@ -225,7 +229,7 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
 
                     {infoWindow}
 
-                    <div className='time-slider padding-left-1 padding-right-1'>
+                    <div className='time-slider padding-left-half padding-right-half'>
                         <form className="calcite-slider">
                             <label>
                                 <input type="range" min="0" max={maxVal} value={this.state.value} step="1" onChange={this.onChangeHandler}></input>
@@ -240,11 +244,11 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
                     </div>
 
                     <div className='previous-btn widget-btn' onClick={this.goPrev}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" height='32' width='32'><path d="M27.202 2h-23.4A1.802 1.802 0 0 0 2 3.798V27.2A1.8 1.8 0 0 0 3.8 29h23.4a1.8 1.8 0 0 0 1.8-1.8V3.798A1.8 1.8 0 0 0 27.202 2zM28 27.2a.8.8 0 0 1-.8.8H3.8a.801.801 0 0 1-.8-.8V3.798A.801.801 0 0 1 3.802 3h23.4a.798.798 0 0 1 .798.798zM20 26L9 15.5 20 5zM19 7.337L10.448 15.5 19 23.663z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='24' width='24'><path d="M6.675 12L15 3.675v16.65z"/></svg>
                     </div>
 
                     <div className='next-btn widget-btn' onClick={this.goNext}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" height='32' width='32'><path d="M27.198 2h-23.4A1.8 1.8 0 0 0 2 3.798V27.2A1.8 1.8 0 0 0 3.8 29h23.4a1.8 1.8 0 0 0 1.8-1.8V3.798A1.802 1.802 0 0 0 27.198 2zM28 27.2a.801.801 0 0 1-.8.8H3.8a.8.8 0 0 1-.8-.8V3.798A.798.798 0 0 1 3.798 3h23.4a.801.801 0 0 1 .802.798zM11 5l11 10.5L11 26zm1 18.663l8.552-8.163L12 7.337z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height='24' width='24'><path d="M9 3.675L17.325 12 9 20.325z"/></svg>
                     </div>
 
                 </div>

@@ -26,9 +26,9 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
         const container = this.containerRef.current;
         const containerWidth = container ? container.clientWidth : 0;
         const gapWidth = uniqueYear.length ? (containerWidth - uniqueYear.length - 5)  / (uniqueYear.length - 1) : 0;
-        const year2posLookup:{
-            [key:number]: number
-        } = {};
+        // const year2posLookup:{
+        //     [key:number]: number
+        // } = {};
 
         const ticks = uniqueYear.map((d,i)=>{
             const xFromLeft = (i * gapWidth);
@@ -37,7 +37,7 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
                 transform: `translate(${xFromLeft}px)`
             };
 
-            year2posLookup[d] = xFromLeft;
+            // year2posLookup[d] = xFromLeft;
 
             return <span key={`time-slider-tick-${i}`} className='tick' data-year={d} style={style}></span>
         });
@@ -45,13 +45,18 @@ export default class TimeControl extends React.PureComponent<IProps, IState> {
 
         const labels = uniqueYear
             .filter((d,i)=>{
-                return (i>=2 && !(d%8))
+                return (i>=2 && !(d%10))
             })
             .map((year,i)=>{
-                const xFromLeft = year2posLookup[year] *1.15;
+
+                const posByYear = uniqueYear.indexOf(year);
+
+                const xFromLeftByYear = (posByYear / uniqueYear.length) * 100;
 
                 const style = {
-                    left: xFromLeft,
+                    position: 'absolute' as 'absolute',
+                    top: 0,
+                    left: xFromLeftByYear + '%',
                     transform: `translate(-50%)`
                 };
 
