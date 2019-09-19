@@ -312,7 +312,10 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
     }
 
     componentDidMount(){
-        // this.initSvg();
+        if( !this.state.svg && this.props.data ){
+            this.initSvg();
+            this.setChartData();
+        }
     }
 
     render(){

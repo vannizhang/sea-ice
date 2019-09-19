@@ -16,6 +16,12 @@ import ISimpleLineSymbol from "esri/symbols/SimpleLineSymbol";
 interface IProps {
     polarRegion:PolarRegion,
     activeRecordDate: IRecordDate
+    padding?: {
+        top?: number,
+        bottom?: number,
+        left?: number,
+        right?: number
+    }
 };
 
 interface IState {};
@@ -38,6 +44,8 @@ export default class Map extends React.PureComponent<IProps, IState> {
 
         loadCss();
 
+        const {padding}  = this.props;
+
         try {
 
             type Modules = [
@@ -52,7 +60,8 @@ export default class Map extends React.PureComponent<IProps, IState> {
 
             const view = new MapView({
                 container: MapConfig.container_id,
-                map: webmap
+                map: webmap,
+                padding
             });
 
             view.when(()=>{

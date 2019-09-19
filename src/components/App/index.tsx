@@ -5,7 +5,9 @@ import Map from '../Map';
 import InfoPanel from '../InfoPanel';
 import TimeControl from '../TimeControl';
 import AboutThisApp from '../AboutThisApp';
-import SideBarHeader from '../Header';
+import SideBarHeader from '../SidebarHeader';
+import MobileHeader from '../MobileHeader';
+import AppConfig from './config';
 
 import { 
     PolarRegion, 
@@ -25,7 +27,9 @@ import {
     generateValue2MonthLookup
 } from '../../services/sea-ice-extents';
 
-interface IProps {};
+interface IProps {
+    isMobile: boolean
+};
 
 interface IState {
     polarRegion:PolarRegion,
@@ -35,6 +39,7 @@ interface IState {
     seaIceExtByMonthData:ISeaIceExtByMonthData,
     medianSeaIceExtByMonthData:IMedianSeaIceExtByMonth
     seaIceExtVal2MonthLookup: ISeaIceExtVal2MonthLookup
+    isMobileInfoWindowVisible: boolean
 };
 
 export default class App extends React.PureComponent<IProps, IState> {
@@ -49,12 +54,14 @@ export default class App extends React.PureComponent<IProps, IState> {
             seaIceExtByYearData: null,
             seaIceExtByMonthData: null,
             medianSeaIceExtByMonthData: null,
-            seaIceExtVal2MonthLookup:null
+            seaIceExtVal2MonthLookup:null,
+            isMobileInfoWindowVisible: false
         }
 
         this.updatePolarRegion = this.updatePolarRegion.bind(this);
         this.timeControlOnValueChange = this.timeControlOnValueChange.bind(this);
         this.seaIceValOnSelect = this.seaIceValOnSelect.bind(this);
+        this.toggleMobileInfoWindow = this.toggleMobileInfoWindow.bind(this);
     }
 
     updatePolarRegion(polarRegion:PolarRegion){
@@ -161,11 +168,25 @@ export default class App extends React.PureComponent<IProps, IState> {
         }
     }
 
+    toggleMobileInfoWindow(){
+
+        const { isMobileInfoWindowVisible } = this.state;
+        const newValue = !isMobileInfoWindowVisible;
+
+        this.setState({
+            isMobileInfoWindowVisible: newValue
+        });
+    }
+
     componentDidMount(){
         this.loadAppData();
     }
 
     render(){
+
+        const { isMobile } = this.props;
+        const { isMobileInfoWindowVisible } = this.state;
+        const mobileHeaderHeight = AppConfig["mobile-header-height"] || 50;
 
         const infoPanel = <InfoPanel 
             polarRegion={this.state.polarRegion}
@@ -176,6 +197,7 @@ export default class App extends React.PureComponent<IProps, IState> {
             medianSeaIceExtByMonthData={this.state.medianSeaIceExtByMonthData}
             seaIceExtVal2MonthLookup={this.state.seaIceExtVal2MonthLookup}
             seaIceValOnSelect={this.seaIceValOnSelect}
+            isMobile={isMobile}
         />;
 
         const timeControl = <TimeControl 
@@ -187,24 +209,60 @@ export default class App extends React.PureComponent<IProps, IState> {
             onValueChange={this.timeControlOnValueChange}
         />;
 
-        const desktopSidePanel = (
-            <div className = 'side-panel fancy-scrollbar'>
-                <SideBarHeader />
+        const desktopSidePanel = !isMobile 
+            ? (
+                <div className = 'side-panel fancy-scrollbar'>
+                    <SideBarHeader 
+                        title={AppConfig.title}
+                    />
+                    {timeControl}
+                    {infoPanel}
+                </div>
+            ) 
+            : null;
+
+        const mobileInfoPanel = ( isMobile && isMobileInfoWindowVisible )
+                ? (
+                    <div className = 'floating-panel fancy-scrollbar'>
+                        {infoPanel}
+                    </div>
+                )
+                : null
+        
+        const mobileHeader = isMobile 
+            ? <MobileHeader 
+                title={AppConfig.title}
+                height={mobileHeaderHeight}
+                toggleChartOnClick={this.toggleMobileInfoWindow}
+            />
+            : null; 
+
+        const mobileBottomPanel = isMobile ? (
+            <div className='mobile-view-bottom-panel'>
                 {timeControl}
-                {infoPanel}
             </div>
-        )
+        ) : null;
 
         return (
-            <div id='appContentDiv'>
+            <div id='appContentDiv' className={isMobile ? 'is-mobile' : ''}>
                 <Map 
                     polarRegion={this.state.polarRegion}
                     activeRecordDate={this.state.activeRecordDate}
+                    padding={{
+                        top: isMobile ? mobileHeaderHeight : 0,
+                        bottom: isMobile ? mobileHeaderHeight : 0
+                    }}
                 />
 
-                {desktopSidePanel}
-
                 <AboutThisApp />
+
+                { desktopSidePanel }
+
+                { mobileHeader }
+
+                { mobileInfoPanel }
+
+                { mobileBottomPanel }
             </div>
         )
     }

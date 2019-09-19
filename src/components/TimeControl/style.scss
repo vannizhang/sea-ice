@@ -134,3 +134,20 @@ $isBelowColor: #ff824d;
         color: $isBelowColor;
     }
 }
+
+.is-mobile {
+    
+    .time-control {
+        .play-btn{
+            width: 35px;
+        }
+    
+        .previous-btn{
+            width: 26px;
+        }
+    
+        .next-btn{
+            width: 26px;
+        }
+    }
+}

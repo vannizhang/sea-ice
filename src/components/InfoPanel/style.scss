@@ -14,3 +14,9 @@
     // max-height: calc(100% - 2.5rem);
     // overflow-y: auto;
 }
+
+.is-mobile {
+    #infoPanelDiv { 
+        padding: 1rem .5rem;
+    }
+}

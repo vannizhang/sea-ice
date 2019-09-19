@@ -1,7 +1,9 @@
 import './style.scss';
 import * as React from 'react';
 
-interface IProps {};
+interface IProps {
+    title: string
+};
 interface IState {};
 
 export default class SideBarHeader extends React.PureComponent<IProps, IState> {

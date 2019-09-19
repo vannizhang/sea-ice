@@ -17,7 +17,8 @@ interface IProps {
     seaIceExtByMonthData:ISeaIceExtByMonthData,
     medianSeaIceExtByMonthData:IMedianSeaIceExtByMonth
     seaIceExtVal2MonthLookup: ISeaIceExtVal2MonthLookup,
-    seaIceValOnSelect:(year:number, value:number)=>void
+    seaIceValOnSelect:(year:number, value:number)=>void,
+    isMobile?:boolean,
 };
 
 interface IState {
@@ -47,18 +48,24 @@ export default class InfoPanel extends React.PureComponent<IProps, IState> {
     }
 
     render(){
-
+        const { isMobile } = this.props;
         const { yearOnHover } = this.state;
 
-        return (
-            <div id='infoPanelDiv' className='info-panel-container'>
-
+        const toggleBtn = !isMobile
+            ? (
                 <div className='trailer-half'>
                     <PolarToggleBtn 
                         activePolarRegion={this.props.polarRegion}
                         onClick={this.props.polarRegionOnChange}
                     />
                 </div>
+            )
+            : null;
+
+        return (
+            <div id='infoPanelDiv' className='info-panel-container'>
+
+                { toggleBtn }
 
                 <div className='trailer-half'>
                     <SeaIceExtByYearChart 
