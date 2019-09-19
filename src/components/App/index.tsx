@@ -234,6 +234,8 @@ export default class App extends React.PureComponent<IProps, IState> {
                 title={AppConfig.title}
                 height={mobileHeaderHeight}
                 toggleChartOnClick={this.toggleMobileInfoWindow}
+                polarRegion={this.state.polarRegion}
+                polarRegionOnChange={this.updatePolarRegion}
             />
             : null; 
 

@@ -23,6 +23,10 @@
         flex-basis: 50px;
     }
 
+    .nav-btns {
+        display: flex;
+    }
+
     .nav-btn {
         display: flex;
         align-items: center;
@@ -30,6 +34,17 @@
         svg {
             fill: #fff;
             stroke: #fff;
+        }
+    }
+
+    .breadcrumbs{
+        
+        .crumb {
+            color: rgba(255,255,255,.8);
+        }
+
+        .crumb.is-active {
+            color: rgba(255,255,255,.95);
         }
     }
 }
