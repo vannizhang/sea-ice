@@ -254,6 +254,7 @@ export default class App extends React.PureComponent<IProps, IState> {
                         top: isMobile ? mobileHeaderHeight : 0,
                         bottom: isMobile ? mobileHeaderHeight : 0
                     }}
+                    isMobile={isMobile}
                 />
 
                 <AboutThisApp />

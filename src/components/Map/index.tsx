@@ -21,7 +21,8 @@ interface IProps {
         bottom?: number,
         left?: number,
         right?: number
-    }
+    },
+    isMobile?:boolean
 };
 
 interface IState {};
@@ -44,7 +45,7 @@ export default class Map extends React.PureComponent<IProps, IState> {
 
         loadCss();
 
-        const {padding}  = this.props;
+        const {padding, isMobile}  = this.props;
 
         try {
 
@@ -61,7 +62,9 @@ export default class Map extends React.PureComponent<IProps, IState> {
             const view = new MapView({
                 container: MapConfig.container_id,
                 map: webmap,
-                padding
+                padding,
+                // overwrite the scale if using a mobile device
+                scale: isMobile ? 56000000: undefined
             });
 
             view.when(()=>{
