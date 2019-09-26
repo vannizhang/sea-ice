@@ -56,9 +56,14 @@ $minValColor4Text: rgba(89,255,252,.85);
         
     }
 
-    .tooltip-content{
-        padding: .5rem;
-        background: rgba(0,0,0,.6);
-        color: rgba(255,255,255,.75);
+    .chart-tooltip-wrap{
+        pointer-events: none;
+
+        .tooltip-content{
+            padding: .5rem;
+            background: rgba(0,0,0,.6);
+            color: rgba(255,255,255,.75);
+            pointer-events: none;
+        }
     }
 }

@@ -211,10 +211,10 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
         if(!invisibleBackgroundRect.size()){
             svg.append("rect")
             .attr('class', backgroundRectClassName)
-            .attr("width", width + 30)
-            .attr("height", height + 30)
+            .attr("width", width + 40)
+            .attr("height", height + 80)
             .attr("transform", (d:any, i:number)=>{ 
-                return "translate(-20, -10)"; 
+                return "translate(-30, -60)"; 
             })
             .style('opacity', 0)
             .on('mouseout', ()=>{
@@ -434,7 +434,7 @@ export default class SeaIceExtByYearChart extends React.PureComponent<IProps, IS
             <div className='sea-ice-ext-by-year-chart-wrap'>
                 { InfoDiv }
 
-                <div ref={this.tooltipRef} style={{
+                <div className='chart-tooltip-wrap' ref={this.tooltipRef} style={{
                     position: 'absolute',
                     top: `${tooltipPos.top}px`,
                     left: `${tooltipPos.left}px`
