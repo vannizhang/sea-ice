@@ -9,12 +9,11 @@ module.exports =  (env, options)=> {
     const devMode = options.mode === 'development' ? true : false;
 
     return {
-        entry: {
-            main: ['./src/index.tsx']
-        },
+        entry: path.resolve(__dirname, './src/index.tsx'),
         output: {
-            path: path.resolve(__dirname, 'dist'),
-            filename: '[name].[hash].js'
+            path: path.resolve(__dirname, './dist'),
+            filename: '[name].[contenthash].js',
+            chunkFilename: '[name].[contenthash].js',
         },
         devtool: 'source-map',
         resolve: {
@@ -26,11 +25,6 @@ module.exports =  (env, options)=> {
                     test: /\.(ts|tsx)$/,
                     loader: 'ts-loader'
                 },
-                // { 
-                //     test: /\.js$/, 
-                //     enforce: "pre", 
-                //     loader: "source-map-loader" 
-                // },
                 {
                     test: /\.s?[ac]ss$/,
                     use: [
@@ -49,16 +43,34 @@ module.exports =  (env, options)=> {
                 { test: /\.woff$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
                 { test: /\.ttf$/,  loader: "url-loader?limit=10000&mimetype=application/octet-stream" },
                 { test: /\.eot$/,  loader: "file-loader" },
-                { test: /\.svg$/,  loader: "url-loader?limit=10000&mimetype=image/svg+xml" },
-                { test: /\.(png|jpg|gif)$/,  loader: "file-loader" },
+                { 
+                    test: /\.svg$/,  
+                    loader: "url-loader",
+                    options: {
+                        limit: 10000,
+                        fallback: {
+                            loader: "file-loader"
+                        }
+                    }
+                },
+                {   
+                    test: /\.(png|jpg|gif)$/,  
+                    loader: "url-loader",
+                    options: {
+                        limit: 10000,
+                        fallback: {
+                            loader: "file-loader"
+                        }
+                    }
+                }
             ]
         },
         plugins: [
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
-                filename: devMode ? '[name].css' : '[name].[hash].css',
-                chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+                filename: devMode ? '[name].css' : '[name].[contenthash].css',
+                chunkFilename: devMode ? '[name].css' : '[name].[contenthash].css',
             }),
             new HtmlWebpackPlugin({
                 template: './src/index.template.html',
@@ -80,8 +92,29 @@ module.exports =  (env, options)=> {
             })
         ],
         optimization: {
+            splitChunks: {
+                cacheGroups: {
+                    default: false,
+                    vendors: false,
+                    // vendor chunk
+                    vendor: {
+                        // sync + async chunks
+                        chunks: 'all',
+                        name: 'vendor',
+                        // import file path containing node_modules
+                        test: /node_modules/
+                    }
+                }
+            },
             minimizer: [
-                new TerserPlugin({}), 
+                new TerserPlugin({
+                    extractComments: true,
+                    terserOptions: {
+                        compress: {
+                            drop_console: true,
+                        }
+                    }
+                }), 
                 new OptimizeCSSAssets({}),
             ],
         },
