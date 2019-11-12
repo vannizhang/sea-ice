@@ -39,11 +39,11 @@ export default class Map extends React.PureComponent<IProps, IState> {
 
         this.state = {
         };
+
+        loadCss();
     }
 
     async initMap(){
-
-        loadCss();
 
         const {padding, isMobile}  = this.props;
 
@@ -77,90 +77,106 @@ export default class Map extends React.PureComponent<IProps, IState> {
     }
 
     async toggleWebMap(){
-        if(this.mapView){
-            this.mapView.map = await this.getWebMap();
+
+        try {
+            if(this.mapView){
+                this.mapView.map = await this.getWebMap();
+            }
+        } catch(err){
+            console.error(err)
         }
     }
 
     async getWebMap(){
 
-        type Modules = [
-            typeof IWebMap
-        ];
+        try {
+            type Modules = [
+                typeof IWebMap
+            ];
+    
+            const [ WebMap ] = await (loadModules([
+                'esri/WebMap'
+            ]) as Promise<Modules>);
+    
+            const seaIceExtLayers = await this.getSeaIceExtLayers();
+    
+            const webmap = new WebMap({
+                portalItem: {
+                    id: MapConfig.web_map_id[this.props.polarRegion]
+                },
+                layers:[
+                    ...seaIceExtLayers
+                ]
+            });
+    
+            return webmap;
 
-        const [ WebMap ] = await (loadModules([
-            'esri/WebMap'
-        ]) as Promise<Modules>);
-
-        const seaIceExtLayers = await this.getSeaIceExtLayers();
-
-        const webmap = new WebMap({
-            portalItem: {
-                id: MapConfig.web_map_id[this.props.polarRegion]
-            },
-            layers:[
-                ...seaIceExtLayers
-            ]
-        });
-
-        return webmap;
+        } catch(err){
+            console.error(err);
+            return null;
+        }
     }
 
     async getSeaIceExtLayers(){
 
-        type Modules = [
-            typeof IFeatureLayer,
-            typeof ISimpleRenderer,
-            typeof ISimpleFillSymbol,
-            typeof ISimpleLineSymbol
-        ];
-
-        const [ FeatureLayer, SimpleRenderer, SimpleFillSymbol, SimpleLineSymbol ] = await (loadModules([
-            'esri/layers/FeatureLayer',
-            "esri/renderers/SimpleRenderer",
-            "esri/symbols/SimpleFillSymbol",
-            "esri/symbols/SimpleLineSymbol"
-        ]) as Promise<Modules>);
-
-        const defExp = this.getDefExpForSeaIceExtLayer();
-        // console.log(defExp);
-
-        const rendererSeaIceExt = new SimpleRenderer({ 
-            symbol: new SimpleFillSymbol({
-                color: MapConfig.sea_ice_ext_feature_service.style.fillColor,
-                outline: {  // autocasts as new SimpleLineSymbol()
+        try {
+            type Modules = [
+                typeof IFeatureLayer,
+                typeof ISimpleRenderer,
+                typeof ISimpleFillSymbol,
+                typeof ISimpleLineSymbol
+            ];
+    
+            const [ FeatureLayer, SimpleRenderer, SimpleFillSymbol, SimpleLineSymbol ] = await (loadModules([
+                'esri/layers/FeatureLayer',
+                "esri/renderers/SimpleRenderer",
+                "esri/symbols/SimpleFillSymbol",
+                "esri/symbols/SimpleLineSymbol"
+            ]) as Promise<Modules>);
+    
+            const defExp = this.getDefExpForSeaIceExtLayer();
+            // console.log(defExp);
+    
+            const rendererSeaIceExt = new SimpleRenderer({ 
+                symbol: new SimpleFillSymbol({
+                    color: MapConfig.sea_ice_ext_feature_service.style.fillColor,
+                    outline: {  // autocasts as new SimpleLineSymbol()
+                        width: 1,
+                        color:  MapConfig.sea_ice_ext_feature_service.style.outlineColor
+                    }
+                })
+            });
+    
+            const seaIceExtLayer = new FeatureLayer({
+                id: this.LayerIdSeaIceExt,
+                url: MapConfig.sea_ice_ext_feature_service.url[this.props.polarRegion],
+                definitionExpression: defExp,
+                visible: true,
+                renderer: rendererSeaIceExt
+            });
+    
+            const rendererMedianSeaIceExt = new SimpleRenderer({ 
+                symbol: new SimpleLineSymbol({
+                    color: MapConfig.median_sea_ice_ext_feature_service.style.outlineColor,
                     width: 1,
-                    color:  MapConfig.sea_ice_ext_feature_service.style.outlineColor
-                }
-            })
-        });
+                    style: 'dash'
+                })
+            });
+    
+            const medianSeaIceExtLayer = new FeatureLayer({
+                id: this.LayerIdMedianSeaIceExt,
+                url: MapConfig.median_sea_ice_ext_feature_service.url[this.props.polarRegion],
+                definitionExpression: defExp,
+                visible: true,
+                renderer: rendererMedianSeaIceExt
+            });
+    
+            return [medianSeaIceExtLayer, seaIceExtLayer];
 
-        const seaIceExtLayer = new FeatureLayer({
-            id: this.LayerIdSeaIceExt,
-            url: MapConfig.sea_ice_ext_feature_service.url[this.props.polarRegion],
-            definitionExpression: defExp,
-            visible: true,
-            renderer: rendererSeaIceExt
-        });
-
-        const rendererMedianSeaIceExt = new SimpleRenderer({ 
-            symbol: new SimpleLineSymbol({
-                color: MapConfig.median_sea_ice_ext_feature_service.style.outlineColor,
-                width: 1,
-                style: 'dash'
-            })
-        });
-
-        const medianSeaIceExtLayer = new FeatureLayer({
-            id: this.LayerIdMedianSeaIceExt,
-            url: MapConfig.median_sea_ice_ext_feature_service.url[this.props.polarRegion],
-            definitionExpression: defExp,
-            visible: true,
-            renderer: rendererMedianSeaIceExt
-        });
-
-        return [medianSeaIceExtLayer, seaIceExtLayer];
-
+        } catch(err){
+            console.error(err);
+            return [];
+        }
     }
 
     updateDefExp4SeaIceExtLayers(){
