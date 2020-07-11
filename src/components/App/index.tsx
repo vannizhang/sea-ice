@@ -254,7 +254,8 @@ export default class App extends React.PureComponent<IProps, IState> {
           activeRecordDate={this.state.activeRecordDate}
           padding={{
             top: isMobile ? mobileHeaderHeight : 0,
-            bottom: isMobile ? mobileHeaderHeight : 0
+            bottom: isMobile ? mobileHeaderHeight : 0,
+            right: 500
           }}
           isMobile={isMobile}
         />
