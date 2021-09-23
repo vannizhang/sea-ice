@@ -40,7 +40,7 @@ This app displays the monthly mean sea ice extent for the Arctic and Antarctic a
     ```
 
 ## Resources
-- [ArcGIS API for JavaScript (version 4.13)](https://developers.arcgis.com/javascript/index.html)
+- [ArcGIS API for JavaScript (version 4.21)](https://developers.arcgis.com/javascript/index.html)
 - [National Snow and Ice Data Center](https://nsidc.org/)
 - [ArcGIS Living Atlas of the World](https://livingatlas.arcgis.com/en/browse/#d=2&q=sea%20ice)
 - [D3.js](https://d3js.org/)
