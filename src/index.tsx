@@ -11,6 +11,14 @@ import * as ReactDOM from 'react-dom';
 import App from './components/App';
 import { miscFns } from 'helper-toolkit-ts';
 
+import {
+  setDefaultOptions
+} from 'esri-loader'
+
+setDefaultOptions({
+  version: '4.21'
+})
+
 const initApp = () => {
   const isMobileDevice = miscFns.isMobileDevice();
   const isNarrowScreen = window.outerWidth < 860 ? true : false;
