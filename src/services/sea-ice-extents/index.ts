@@ -116,6 +116,7 @@ const querySeaIceExtByMonth = async (): Promise<ISeaIceExtByMonthQueryResponse> 
       antarcticConfig.fields.month,
       antarcticConfig.fields.extent,
     ],
+    orderByFields: `${antarcticConfig.fields.year},${antarcticConfig.fields.month}`,
     returnGeometry: false,
   })) as IQueryFeaturesResponse;
 
@@ -127,6 +128,7 @@ const querySeaIceExtByMonth = async (): Promise<ISeaIceExtByMonthQueryResponse> 
       arcticConfig.fields.month,
       arcticConfig.fields.extent,
     ],
+    orderByFields: `${arcticConfig.fields.year},${arcticConfig.fields.month}`,
     returnGeometry: false,
   })) as IQueryFeaturesResponse;
 
