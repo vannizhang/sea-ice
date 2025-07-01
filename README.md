@@ -1,4 +1,7 @@
 # Sea Ice
+
+**As of June 30, 2025, data used to support updates to the Sea Ice Aware app are no longer available from the source. The app may still be used to view historical data.**
+
 This app displays the monthly mean sea ice extent for the [Arctic](https://www.arcgis.com/home/item.html?id=d1fb8225058e4a0d96ead7b9a574a652) and [Antarctic](https://www.arcgis.com/home/item.html?id=e7f11116c0bc42fb8c7c4d1b1d70eceb) along with the historical median extent.
 
 [View it live](https://livingatlas.arcgis.com/sea-ice/)
